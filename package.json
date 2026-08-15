@@ -1,0 +1,33 @@
+{
+  "name": "pawan-portfolio",
+  "version": "1.0.0",
+  "description": "Pawan Patil — AI Product Builder & Developer Portfolio",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "lint": "eslint ."
+  },
+  "nodemonConfig": {
+    "watch": ["server.js", "server/", "api/"],
+    "ext": "js,mjs,json",
+    "ignore": ["public/", "node_modules/", "*.html"]
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^7.1.0",
+    "mongoose": "^8.5.2",
+    "nodemailer": "^9.0.5",
+    "validator": "^13.12.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

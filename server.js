@@ -12,6 +12,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import contactHandler from './api/contact.js';
+import spotifyHandler from './api/spotify.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app  = express();
@@ -26,9 +27,10 @@ app.use(
         defaultSrc: ["'self'"],
         styleSrc:   ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
         fontSrc:    ["'self'", 'https://fonts.gstatic.com'],
-        scriptSrc:  ["'self'", "'unsafe-inline'", 'https://unpkg.com'],
-        imgSrc:     ["'self'", 'data:', 'blob:'],
-        connectSrc: ["'self'"],
+        scriptSrc:  ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://open.spotify.com'],
+        frameSrc:   ['https://open.spotify.com'],
+        imgSrc:     ["'self'", 'data:', 'blob:', 'https://i.scdn.co'],
+        connectSrc: ["'self'", 'https://github-contributions-api.jogruber.de'],
       },
     },
   })
@@ -63,6 +65,10 @@ app.use(globalLimiter);
 app.post('/api/contact', async (req, res) => {
   // Adapt Express req/res to the Vercel-style handler
   await contactHandler(req, res);
+});
+
+app.get('/api/spotify', async (req, res) => {
+  await spotifyHandler(req, res);
 });
 
 // ── Static frontend ───────────────────────────────────────────────────────────

@@ -5,23 +5,31 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 // ─────────────────────────────────────────────────────────────────────────────
 // Content — edit these arrays to update the site
 // ─────────────────────────────────────────────────────────────────────────────
+// live: public URL (omit if none) · repo: GitHub repo name · shot: face-card screenshot in /img (omit → themed card)
+// api: optional API docs URL · sleeps: true for free Render services (shows a wake-up note)
+const GITHUB = 'https://github.com/Pawanp-23/';
 const projects = [
-  { name:'Clinic Voice AI', cat:'Generative AI', year:'2026',
-    headline:'A clinic receptionist that listens, thinks and talks back — in real time.',
-    desc:'A real-time healthcare voice assistant pipeline combining speech-to-text, an LLM, text-to-speech and WebRTC-style conversational transport.',
-    tags:['Python','Pipecat','Deepgram','LLM','TTS'] },
-  { name:'ClinicCare RAG', cat:'RAG / AI', year:'2026',
-    headline:'Asking clinical documents questions instead of scrolling through them.',
-    desc:'A retrieval-augmented generation system for clinical documents using embeddings, vector search and MongoDB Atlas.',
-    tags:['RAG','Embeddings','MongoDB','Python'] },
-  { name:'EV Smart Platform', cat:'Research / AI-IoT', year:'2026',
-    headline:'One platform for an EV driver’s three worries: battery, charger, route.',
-    desc:'Battery monitoring, charging discovery, GIS routing, predictive alerts, booking, diagnostics and cloud IoT — in one intelligent EV infrastructure concept.',
-    tags:['AI','IoT','GIS','Cloud','ITS'] },
-  { name:'JARVIS X', cat:'AI Automation', year:'2026',
-    headline:'A personal AI OS that remembers, plans and acts across my tools.',
-    desc:'Voice intelligence, memory, workflow automation, tool integrations and agentic assistance — a personal operating-system concept.',
-    tags:['AI Agents','Automation','FastAPI','React','LLM'] },
+  { name:'LRN', cat:'EdTech · Finance prep', year:'2026',
+    live:'https://lrn-client.vercel.app', repo:'LRN', shot:'/img/project-lrn.jpg',
+    headline:'A 30-question diagnostic that shows finance candidates where they actually stand.',
+    desc:'Accounting, valuation, M&A and LBO questions with instant grading, a report and a focused practice plan — shipped as a React SPA with CI for lint, tests and build.',
+    tags:['React','TypeScript','Vite','CI'] },
+  { name:'CityCare Clinic', cat:'Healthcare · AI', year:'2026',
+    live:'https://citycare-frontend-wlw8.onrender.com', repo:'City_Care', shot:'/img/project-citycare.jpg', sleeps:true,
+    headline:'A clinic where doctors can ask the AI about their day — but it can’t touch bookings.',
+    desc:'Four-role appointment system for a Nagpur hospital with race-safe slot booking and a Gemini function-calling assistant that is read-only by design.',
+    tags:['React','FastAPI','MongoDB','Gemini','JWT'] },
+  { name:'Whitfield WMS', cat:'Logistics · SaaS', year:'2026',
+    live:'https://whitfield-frontend.onrender.com', repo:'Warehouse-Management-System', shot:'/img/project-whitfield.jpg', sleeps:true,
+    api:'https://whitfield-api.onrender.com/docs',
+    headline:'Warehouse software that won’t let two orders grab the same last box.',
+    desc:'Multi-tenant 3PL platform: receiving, atomic inventory reservations, shipments and tracking, invoicing, realtime WebSocket updates and grounded RAG chat.',
+    tags:['Next.js','FastAPI','MongoDB','WebSocket','Stripe'] },
+  { name:'SAHARA', cat:'Smart India Hackathon · XAI', year:'2026',
+    repo:'SIH',
+    headline:'Spotting burnout before it happens — and explaining why.',
+    desc:'SIH26186: privacy-preserving welfare intelligence that flags occupational stress and fatigue risk, explains causes with SHAP and simulates interventions.',
+    tags:['React','Express','Gemini','SHAP','Recharts'] },
 ];
 
 // TODO(Pawan): add years, e.g. when:'2019 — 2022'
@@ -85,14 +93,32 @@ const favourites = [
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+const GH_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.1.9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>';
+
+const face = p => p.shot ? `
+  <a class="face face-shot" href="${p.live}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+    <span class="face-bar"><i></i><i></i><i></i><span class="face-url mono">${esc(p.live.replace(/^https?:\/\//,''))}</span></span>
+    <img src="${p.shot}" alt="" loading="lazy" />
+  </a>` : `
+  <a class="face face-title" href="${GITHUB}${p.repo}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+    <span class="face-bar"><i></i><i></i><i></i><span class="face-url mono">github.com/Pawanp-23/${esc(p.repo)}</span></span>
+    <span class="face-body"><span class="face-name">${esc(p.name)}</span><span class="face-stack mono">${p.tags.slice(0,3).map(esc).join(' · ')}</span></span>
+  </a>`;
+
 $('#workGrid').innerHTML = projects.map((p,i) => `
   <li class="reveal" style="--d:${(i%2)*.1}s">
     <article class="glass work-card">
-      <div class="work-meta mono"><span>${esc(p.cat)}</span><span>${esc(p.year)}</span></div>
-      <span class="work-num">0${i+1}</span>
+      ${face(p)}
+      <div class="work-meta mono"><span>0${i+1} · ${esc(p.cat)}</span><span>${esc(p.year)}</span></div>
       <h3>${esc(p.headline)}</h3>
       <p><span class="work-name">${esc(p.name)}</span> — ${esc(p.desc)}</p>
       <div class="tags">${p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+      <div class="work-links">
+        ${p.live ? `<a class="btn btn-accent btn-sm" href="${p.live}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} live site">Live site ↗</a>` : ''}
+        <a class="btn btn-glass btn-sm" href="${GITHUB}${p.repo}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} source on GitHub">${GH_ICON} GitHub</a>
+        ${p.api ? `<a class="btn btn-ghost btn-sm" href="${p.api}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} API documentation">API docs ↗</a>` : ''}
+        ${!p.live ? '<span class="work-note mono">Source only</span>' : p.sleeps ? '<span class="work-note mono" title="Hosted on Render’s free tier — the first visit can take up to a minute">⏾ may take ~30s to wake</span>' : ''}
+      </div>
     </article>
   </li>`).join('');
 

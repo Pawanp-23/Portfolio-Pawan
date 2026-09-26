@@ -3,15 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pawan Patil — AI Product Builder &amp; Developer</title>
-  <meta name="description" content="Portfolio of Pawan Patil — IT engineer with an ENTC foundation, building AI-powered products, voice agents, RAG systems and connected hardware." />
+  <title>Pawan Patil — AI Product Engineer &amp; Forward Deployed Engineer</title>
+  <meta name="description" content="Pawan Patil is an AI Product Engineer from Nagpur building RAG systems, real-time voice agents and production React apps. Shipped fde.eigi.ai for Eigi AI; led the MRSAC EV Smart Platform." />
+  <meta name="author" content="Pawan Patil" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#000000" />
-  <meta property="og:title" content="Pawan Patil — AI Product Builder &amp; Developer" />
-  <meta property="og:description" content="IT engineer building AI-powered products, intelligent automation, and connected systems." />
-  <meta property="og:type" content="website" />
-  <meta property="og:image" content="/img/avatar.jpg" />
+  <link rel="canonical" href="https://portfolio-pawan-ten.vercel.app/" />
+
+  <!-- Link previews: LinkedIn, WhatsApp, Slack, Facebook -->
+  <meta property="og:type" content="profile" />
+  <meta property="og:site_name" content="Pawan Patil" />
+  <meta property="og:url" content="https://portfolio-pawan-ten.vercel.app/" />
+  <meta property="og:title" content="Pawan Patil — AI Product Engineer &amp; Forward Deployed Engineer" />
+  <meta property="og:description" content="RAG systems, real-time voice agents and production React apps. Shipped fde.eigi.ai; led the MRSAC EV Smart Platform. Based in Nagpur, India." />
+  <meta property="og:image" content="https://portfolio-pawan-ten.vercel.app/og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Pawan Patil — AI Product Engineer · Forward Deployed Engineer" />
+  <meta property="og:locale" content="en_IN" />
+  <meta property="profile:first_name" content="Pawan" />
+  <meta property="profile:last_name" content="Patil" />
+
+  <!-- X / Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="/img/avatar.jpg" />
+  <meta name="twitter:site" content="@pure_paradox_" />
+  <meta name="twitter:creator" content="@pure_paradox_" />
+  <meta name="twitter:title" content="Pawan Patil — AI Product Engineer &amp; Forward Deployed Engineer" />
+  <meta name="twitter:description" content="RAG systems, real-time voice agents and production React apps. Shipped fde.eigi.ai. Nagpur, India." />
+  <meta name="twitter:image" content="https://portfolio-pawan-ten.vercel.app/og.jpg" />
+
+  <!-- Icons -->
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <!-- Structured data: tells Google who this page is about -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "url": "https://portfolio-pawan-ten.vercel.app/",
+    "mainEntity": {
+      "@type": "Person",
+      "name": "Pawan Patil",
+      "jobTitle": "AI Product Engineer",
+      "description": "AI Product Engineer and Forward Deployed Engineer building RAG systems, real-time voice agents and production React applications.",
+      "url": "https://portfolio-pawan-ten.vercel.app/",
+      "image": "https://portfolio-pawan-ten.vercel.app/img/avatar.jpg",
+      "address": { "@type": "PostalAddress", "addressLocality": "Nagpur", "addressRegion": "Maharashtra", "addressCountry": "IN" },
+      "alumniOf": [
+        { "@type": "CollegeOrUniversity", "name": "St. Vincent Pallotti College of Engineering & Technology, Nagpur" },
+        { "@type": "EducationalOrganization", "name": "Government Polytechnic, Nagpur" }
+      ],
+      "knowsAbout": ["Retrieval-Augmented Generation", "Voice AI", "LLM APIs", "React", "TypeScript", "FastAPI", "MongoDB", "GIS", "Embedded systems"],
+      "sameAs": [
+        "https://github.com/Pawanp-23",
+        "https://www.linkedin.com/in/pawanpatil23dec2005",
+        "https://x.com/pure_paradox_"
+      ]
+    }
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Instrument+Serif:ital@1&family=Onest:wght@300;400;500;600&family=Pixelify+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -164,6 +217,16 @@
     </div>
   </section>
 
+  <!-- The stack: two crossing infinite ribbons -->
+  <section class="stack" aria-labelledby="stackTitle">
+    <p class="kicker mono reveal center" id="stackTitle">◦ THE STACK ◦</p>
+    <div class="ribbons">
+      <div class="ribbon ribbon-a"><div class="ribbon-track" id="ribbonA"></div></div>
+      <div class="ribbon ribbon-b"><div class="ribbon-track" id="ribbonB"></div></div>
+    </div>
+    <ul class="sr-only" id="stackList"></ul>
+  </section>
+
   <!-- ◦ 03 ◦ About -->
   <section id="about" class="section">
     <header class="section-head">
@@ -186,14 +249,20 @@
         <img src="/img/portrait.jpg" alt="Pawan Patil in a black suit against a red background" loading="lazy" />
       </figure>
 
+      <article class="glass card exp reveal">
+        <div class="card-row"><h3 class="card-title">Experience</h3><a class="link-arrow" href="https://www.linkedin.com/in/pawanpatil23dec2005" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></div>
+        <ol class="timeline" id="expTimeline"></ol>
+      </article>
+
       <article class="glass card edu reveal">
         <h3 class="card-title">Education</h3>
         <ol class="timeline" id="eduTimeline"></ol>
-      </article>
-
-      <article class="glass card exp reveal">
-        <div class="card-row"><h3 class="card-title">Industry exposure</h3><a class="link-arrow" href="https://www.linkedin.com/in/pawanpatil23dec2005" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></div>
-        <ol class="timeline" id="expTimeline"></ol>
+        <div class="beyond">
+          <p class="mono beyond-label">Leadership</p>
+          <p class="beyond-text">Coordinator — Advantage Vidarbha Startup Summit, Nagpur. Worked with founders, investors and industry leaders.</p>
+          <p class="mono beyond-label">Certifications</p>
+          <div class="tags"><span class="tag">MATLAB Onramp</span><span class="tag">TCS iON Young Professional</span><span class="tag">MS-CIT</span><span class="tag">College Hackathon</span></div>
+        </div>
       </article>
     </div>
 

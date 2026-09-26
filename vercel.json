@@ -6,7 +6,7 @@
       "dest": "/api/$1"
     },
     {
-      "src": "/(.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))",
+      "src": "/(.*\\.(css|js|mjs|json|png|jpg|jpeg|gif|svg|webp|avif|ico|woff|woff2|ttf|eot|txt|xml|webmanifest|pdf))",
       "dest": "/public/$1"
     },
     {

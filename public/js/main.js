@@ -25,25 +25,36 @@ const projects = [
     headline:'Warehouse software that won’t let two orders grab the same last box.',
     desc:'Multi-tenant 3PL platform: receiving, atomic inventory reservations, shipments and tracking, invoicing, realtime WebSocket updates and grounded RAG chat.',
     tags:['Next.js','FastAPI','MongoDB','WebSocket','Stripe'] },
-  { name:'SAHARA', cat:'Smart India Hackathon · XAI', year:'2026',
+  { name:'SAHARA', cat:'Smart India Hackathon · Team Lead', year:'2026',
     repo:'SIH',
     headline:'Spotting burnout before it happens — and explaining why.',
     desc:'SIH26186: privacy-preserving welfare intelligence that flags occupational stress and fatigue risk, explains causes with SHAP and simulates interventions.',
     tags:['React','Express','Gemini','SHAP','Recharts'] },
 ];
 
-// TODO(Pawan): add years, e.g. when:'2019 — 2022'
+// Newest first. Source: résumé (Sep 2026)
 const education = [
-  { when:'Foundation', what:'Diploma — ENTC', where:'Electronics & Telecommunication' },
-  { when:'Now', what:'B.Tech — Information Technology', where:'Software, AI & systems', now:true },
+  { when:'2024 — Present', what:'B.Tech, Information Technology', where:'St. Vincent Pallotti College of Engg. & Technology, Nagpur', detail:'SGPA 7.0 · in progress', now:true },
+  { when:'2024', what:'Diploma, Electronics & Telecommunication', where:'Government Polytechnic, Nagpur', detail:'82%' },
+  { when:'2021', what:'Class X', where:'Somalwar High School, Nagpur', detail:'78%' },
 ];
 
-// TODO(Pawan): add your role + dates for each
 const experience = [
-  { when:'GIS · Remote sensing', what:'MRSAC', where:'Maharashtra Remote Sensing Applications Centre' },
-  { when:'Telecom', what:'BSNL', where:'Bharat Sanchar Nigam Limited' },
-  { when:'Automotive', what:'Subros', where:'Subros Limited' },
+  { when:'2026 — Now', what:'AI Product / Frontend Contributor', where:'EIGI AI · fde.eigi.ai', now:true,
+    detail:'Turn ambiguous product requirements into structured UI flows and API-integrated React interfaces; ship iterative FDE releases with backend and leadership.' },
+  { when:'Jun — Jul 2026', what:'Project Lead / App Lead', where:'MRSAC — Maharashtra Remote Sensing Application Centre, Nagpur',
+    detail:'Led React architecture for a GIS-based EV Smart Platform; integrated field-verified data for 8 charging stations, 34 charging points and 5 battery service centres.' },
+  { when:'May — Jun 2025', what:'Industrial Intern', where:'BSNL — Bharat Sanchar Nigam Limited',
+    detail:'Rotated across NIB, FTTH, Routing & Networking and Sales — optical-fibre, broadband infrastructure and network architecture.' },
+  { when:'Jan — Jun 2024', what:'Diploma Engineer Trainee', where:'Subros Limited, Pune',
+    detail:'Quality control, water-leak testing, HVAC assembly and production checks under 5S and safety standards.' },
 ];
+
+// The stack ribbons (from the résumé). A: AI + backend, B: frontend + tools + hardware
+const stack = {
+  a:['LLM APIs','RAG','Vector Search','AI Agents','Voice AI','Python','FastAPI','Node.js','MongoDB','Atlas Vector Search','WebRTC','WebSockets','Deepgram','Gemini Live','SHAP'],
+  b:['React','TypeScript','JavaScript','Vite','Tailwind CSS','Framer Motion','Express','REST APIs','Git','Vercel','Render','QGIS','GeoJSON','Arduino','C / C++','MATLAB'],
+};
 
 const method = [
   ['01 · Mindset','Problems before models','I start with the workflow that hurts, then choose the model — never the other way round.'],
@@ -127,7 +138,18 @@ const timeline = items => items.map(t => `
     <span class="tl-when mono">${esc(t.when)}</span>
     <div class="tl-what">${esc(t.what)}</div>
     <div class="tl-where">${esc(t.where)}</div>
+    ${t.detail ? `<p class="tl-detail">${esc(t.detail)}</p>` : ''}
   </li>`).join('');
+// Each track holds the list twice, so sliding by -50% loops seamlessly
+const ribbon = items => {
+  const run = items.map(t => `<span class="rb-item">${esc(t)}</span><span class="rb-sep" aria-hidden="true">✦</span>`).join('');
+  return `<div class="rb-run">${run}</div><div class="rb-run" aria-hidden="true">${run}</div>`;
+};
+$('#ribbonA').innerHTML = ribbon(stack.a);
+$('#ribbonB').innerHTML = ribbon(stack.b);
+$('#stackList').innerHTML = [...stack.a, ...stack.b].map(t => `<li>${esc(t)}</li>`).join('');
+document.querySelectorAll('.ribbon').forEach(r => r.setAttribute('aria-hidden', 'true'));
+
 $('#eduTimeline').innerHTML = timeline(education);
 $('#expTimeline').innerHTML = timeline(experience);
 

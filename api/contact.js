@@ -98,14 +98,23 @@ export default async function handler(req, res) {
       }),
     ];
 
-    // Fire-and-forget — don't await so we respond fast
-    Promise.allSettled(emailPromises).then((results) => {
+    // Await the emails: on Vercel the function is frozen as soon as it responds,
+    // so fire-and-forget sends can silently never happen. Capped so a slow SMTP
+    // server can't hang the form; the submission is already saved either way.
+    const EMAIL_TIMEOUT_MS = 7000;
+    const results = await Promise.race([
+      Promise.allSettled(emailPromises),
+      new Promise((resolve) => setTimeout(() => resolve(null), EMAIL_TIMEOUT_MS)),
+    ]);
+    if (!results) {
+      console.error(`Emails still pending after ${EMAIL_TIMEOUT_MS}ms`);
+    } else {
       results.forEach((r, i) => {
         if (r.status === 'rejected') {
           console.error(`Email ${i} failed:`, r.reason?.message);
         }
       });
-    });
+    }
 
     // ── 7. Respond ───────────────────────────────────────────────────────────
     return res.status(200).json({

@@ -59,7 +59,7 @@ export async function sendNewSubmissionEmail(submission) {
               <tr>
                 <td style="background:#0a0a0a;padding:28px 32px;">
                   <p style="margin:0;font-size:22px;font-weight:600;color:#fff;">
-                    ✦ Pawan <span style="color:#cf8047;">·</span> New Message
+                    ✦ Pawan <span style="color:#e5192c;">·</span> New Message
                   </p>
                 </td>
               </tr>
@@ -82,7 +82,7 @@ export async function sendNewSubmissionEmail(submission) {
                       <td style="padding-bottom:20px;">
                         <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8d8d8d;">Email</p>
                         <p style="margin:0;font-size:16px;color:#111;">
-                          <a href="mailto:${submission.email}" style="color:#b15f2c;text-decoration:none;">${submission.email}</a>
+                          <a href="mailto:${submission.email}" style="color:#e5192c;text-decoration:none;">${submission.email}</a>
                         </p>
                       </td>
                     </tr>
@@ -95,7 +95,7 @@ export async function sendNewSubmissionEmail(submission) {
                   </table>
 
                   <hr style="border:none;border-top:1px solid #e6e5e2;margin:28px 0 20px;">
-                  <a href="mailto:${submission.email}?subject=Re: Your message on pawanpatil.dev"
+                  <a href="mailto:${submission.email}?subject=Re: Your message on my portfolio"
                     style="display:inline-block;background:#0a0a0a;color:#fff;text-decoration:none;font-size:14px;
                            font-weight:500;padding:12px 24px;border-radius:9999px;">
                     Reply to ${submission.name} →
@@ -146,9 +146,9 @@ export async function sendAutoReply(submission) {
               <tr>
                 <td style="background:#0a0a0a;padding:28px 32px;">
                   <p style="margin:0;font-size:22px;font-weight:600;color:#fff;">
-                    ✦ Pawan <span style="color:#cf8047;">Patil</span>
+                    ✦ Pawan <span style="color:#e5192c;">Patil</span>
                   </p>
-                  <p style="margin:4px 0 0;font-size:13px;color:rgba(255,255,255,.5);">AI Product Builder & Developer</p>
+                  <p style="margin:4px 0 0;font-size:13px;color:rgba(255,255,255,.5);">AI Product Engineer · Forward Deployed Engineer</p>
                 </td>
               </tr>
               <!-- Body -->
@@ -166,7 +166,7 @@ export async function sendAutoReply(submission) {
                   </p>
 
                   <!-- Quote back their message -->
-                  <div style="background:#f1f0ee;border-left:3px solid #b15f2c;border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:28px;">
+                  <div style="background:#f1f0ee;border-left:3px solid #e5192c;border-radius:0 8px 8px 0;padding:16px 20px;margin-bottom:28px;">
                     <p style="margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8d8d8d;">Your message</p>
                     <p style="margin:0;font-size:14px;color:#444;line-height:1.6;white-space:pre-wrap;">${submission.project}</p>
                   </div>

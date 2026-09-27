@@ -449,6 +449,40 @@ function initSpotify(){
   el.prev.addEventListener('click', () => step(-1));
   el.next.addEventListener('click', () => step(1));
 
+  // ── Vinyl scratch: drag the record in a circle to scrub (1 turn = 8 s) ──────
+  const disc = $('.sp-disc');
+  let spin = 0, scratch = null;
+  const angle = e => { const r = disc.getBoundingClientRect(); return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI; };
+  disc.addEventListener('pointerdown', e => {
+    if (!current()) return;
+    disc.setPointerCapture(e.pointerId);
+    const cs = getComputedStyle(disc).transform;                  // continue from the current spin angle
+    if (cs && cs !== 'none'){ const [a, b] = cs.slice(7, -1).split(',').map(Number); spin = Math.atan2(b, a) * 180 / Math.PI; }
+    scratch = { last: angle(e), turned: 0 };
+    card.classList.add('is-scratching');
+  });
+  disc.addEventListener('pointermove', e => {
+    if (!scratch) return;
+    let d = angle(e) - scratch.last; scratch.last += d;
+    if (d > 180) d -= 360; else if (d < -180) d += 360;
+    scratch.turned += d; spin += d;
+    disc.style.transform = `rotate(${spin}deg)`;
+    el.status.textContent = `Scratching ${scratch.turned >= 0 ? '⏩' : '⏪'} ${(Math.abs(scratch.turned) / 45).toFixed(1)} s`;
+  });
+  const release = async () => {
+    if (!scratch) return;
+    const shiftMs = scratch.turned / 360 * 8000; scratch = null;
+    card.classList.remove('is-scratching'); disc.style.transform = '';
+    const t = current();
+    if (t && controllerP && visitor.uri === uriOf(t) && visitor.dur){      // visitor's own playback: really seek
+      const pos = Math.max(0, Math.min(visitor.dur - 500, visitor.pos + (visitor.playing ? performance.now() - visitor.at : 0) + shiftMs));
+      (await controllerP).seek(pos / 1000);
+    }
+    render();
+  };
+  disc.addEventListener('pointerup', release);
+  disc.addEventListener('pointercancel', release);
+
   render();   // favourites straight away; live data replaces the first slot when it arrives
   load();
   setInterval(progress, 1000);
@@ -655,3 +689,133 @@ form.addEventListener('submit', async e => {
     showFormError('Network error. Please check your connection and try again.');
   }
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Break my warehouse — simulated race for the last box
+// Naive: read → (network delay) → write, so both orders see "1 in stock".
+// Atomic: check-and-decrement is one step, so only one order can win.
+// ─────────────────────────────────────────────────────────────────────────────
+(() => {
+  const count = $('#stockCount'), log = $('#raceLog'), verdict = $('#raceVerdict'), shelf = $('#shelf'), race = $('#race');
+  let stock = 1, mode = 'atomic', sold = 0, busy = false;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const line = (who, text, cls = '') => { log.insertAdjacentHTML('beforeend', `<li class="${cls}"><b>${who}</b> ${text}</li>`); };
+  const show = () => { count.textContent = stock < 0 ? `−${-stock}` : stock; shelf.dataset.state = stock < 0 ? 'bad' : stock === 0 ? 'empty' : ''; };
+
+  async function order(who){
+    if (mode === 'atomic'){
+      await wait(120 + Math.random() * 80);
+      if (stock > 0){ stock--; sold++; line(who, 'reserve(1) → ✓ reserved atomically', 'ok'); }
+      else line(who, 'reserve(1) → ✗ out of stock — refused', 'no');
+    } else {
+      const seen = stock;
+      line(who, `read stock → ${seen}`);
+      await wait(260);                                            // the gap where the race happens
+      if (seen > 0){ stock--; sold++; line(who, `${seen} > 0, so write stock − 1 → ${stock}`, stock < 0 ? 'bad' : 'ok'); }
+      else line(who, 'saw 0 → refused', 'no');
+    }
+    show();
+  }
+  function judge(){
+    const bad = stock < 0;
+    if (bad) verdict.textContent = `Oversold! Sold ${sold} boxes but only had 1. Someone gets an apology email.`;
+    else if (sold) verdict.textContent = `Consistent. ${sold} sold, stock ${stock}. ${mode === 'atomic' ? 'The other order was politely refused.' : 'Lucky timing — try ⚡ Race both.'}`;
+    race.dataset.result = bad ? 'bad' : 'ok';
+  }
+  const reset = () => { stock = 1; sold = 0; log.innerHTML = ''; verdict.textContent = 'Press ⚡ Race both.'; delete race.dataset.result; show(); };
+  async function run(orders){
+    if (busy) return; busy = true;
+    if (stock < 1) reset();
+    await Promise.all(orders.map(order)); judge(); busy = false;
+  }
+  $('#raceBoth').onclick = () => run(['A', 'B']);
+  race.querySelectorAll('[data-order]').forEach(b => b.onclick = () => run([b.dataset.order]));
+  $('#raceReset').onclick = reset;
+  race.querySelectorAll('.race-mode').forEach(b => b.onclick = () => {
+    mode = b.dataset.mode;
+    race.querySelectorAll('.race-mode').forEach(x => { x.classList.toggle('is-on', x === b); x.setAttribute('aria-checked', x === b); });
+    reset();
+  });
+  show();
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Dark / light switch — CRT "switch-off" then flip
+// ─────────────────────────────────────────────────────────────────────────────
+(() => {
+  const btn = $('#themeBtn'), root = document.documentElement;
+  const label = () => btn.setAttribute('aria-label', `Switch to ${root.dataset.theme === 'light' ? 'dark' : 'light'} theme`);
+  label();
+  btn.onclick = () => {
+    const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+    const flip = () => { root.dataset.theme = next; try { localStorage.setItem('theme', next); } catch {} label(); };
+    if (reduceMotion) return flip();
+    root.classList.add('crt');
+    setTimeout(flip, 280);
+    setTimeout(() => root.classList.remove('crt'), 620);
+  };
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Pixel guestbook — 16×16 doodles stored via /api/guestbook
+// ─────────────────────────────────────────────────────────────────────────────
+(() => {
+  const N = 16, PALETTE = [null, '#e5192c', '#f3f1ee', '#9b9895', '#3a3a3a', '#ffb000'];   // 0 = eraser
+  const cv = $('#gbCanvas'), ctx = cv.getContext('2d'), wall = $('#gbWall'), msg = $('#gbMsg');
+  const px = new Array(N * N).fill(0);
+  let colour = 1, drawing = false;
+
+  $('#gbPalette').innerHTML = PALETTE.map((c, i) => `<button type="button" class="gb-swatch${i === 1 ? ' is-on' : ''}" data-c="${i}" role="radio" aria-checked="${i === 1}" aria-label="${i ? 'Colour ' + c : 'Eraser'}" style="${c ? `--sw:${c}` : ''}">${i ? '' : '⌫'}</button>`).join('');
+  $('#gbPalette').onclick = e => {
+    const b = e.target.closest('.gb-swatch'); if (!b) return;
+    colour = +b.dataset.c;
+    document.querySelectorAll('.gb-swatch').forEach(s => { s.classList.toggle('is-on', s === b); s.setAttribute('aria-checked', s === b); });
+  };
+
+  const paintGrid = (c, pixels, size) => {
+    const g = c.getContext('2d'), cell = size / N;
+    g.clearRect(0, 0, size, size);
+    for (let i = 0; i < N * N; i++){ const col = PALETTE[+pixels[i]]; if (col){ g.fillStyle = col; g.fillRect((i % N) * cell, Math.floor(i / N) * cell, cell, cell); } }
+  };
+  const draw = () => {
+    paintGrid(cv, px.join(''), cv.width);
+    ctx.strokeStyle = 'rgba(128,128,128,.18)'; ctx.lineWidth = 1;
+    for (let k = 1; k < N; k++){ const p = k * cv.width / N + .5; ctx.beginPath(); ctx.moveTo(p, 0); ctx.lineTo(p, cv.height); ctx.moveTo(0, p); ctx.lineTo(cv.width, p); ctx.stroke(); }
+  };
+  const at = e => { const r = cv.getBoundingClientRect(); const x = Math.floor((e.clientX - r.left) / r.width * N), y = Math.floor((e.clientY - r.top) / r.height * N); return x >= 0 && y >= 0 && x < N && y < N ? y * N + x : -1; };
+  const stroke = e => { const i = at(e); if (i >= 0 && px[i] !== colour){ px[i] = colour; draw(); } };
+  cv.addEventListener('pointerdown', e => { drawing = true; cv.setPointerCapture(e.pointerId); stroke(e); });
+  cv.addEventListener('pointermove', e => drawing && stroke(e));
+  cv.addEventListener('pointerup', () => drawing = false);
+  $('#gbClear').onclick = () => { px.fill(0); draw(); };
+  draw();
+
+  const ago = iso => { const m = Math.round((Date.now() - new Date(iso)) / 60000); return m < 60 ? `${Math.max(1, m)}m` : m < 1440 ? `${Math.round(m / 60)}h` : `${Math.round(m / 1440)}d`; };
+  const addTile = (it, first) => {
+    const li = document.createElement('li'); li.className = 'gb-tile';
+    const c = document.createElement('canvas'); c.width = c.height = 96; paintGrid(c, it.pixels, 96);
+    li.append(c); li.insertAdjacentHTML('beforeend', `<span class="gb-name">${esc(it.name)}</span><span class="gb-when mono">${ago(it.createdAt)}</span>`);
+    first ? wall.prepend(li) : wall.append(li);
+  };
+  fetch('/api/guestbook').then(r => r.ok ? r.json() : Promise.reject()).then(d => {
+    wall.innerHTML = ''; d.items.forEach(it => addTile(it));
+    if (!d.items.length) wall.innerHTML = '<li class="gb-empty mono">Be the first to sign ✦</li>';
+  }).catch(() => { wall.innerHTML = '<li class="gb-empty mono">The wall is offline right now.</li>'; });
+
+  $('#gbForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const name = $('#gbName').value.trim(), btn = $('#gbSubmit');
+    if (name.length < 2) return msg.textContent = 'Add your name ✎';
+    if (!px.some(Boolean)) return msg.textContent = 'Draw something first ✎';
+    btn.disabled = true; msg.textContent = 'Signing…';
+    try {
+      const res = await fetch('/api/guestbook', { method:'POST', headers:{ 'Content-Type':'application/json' }, body:JSON.stringify({ name, pixels:px.join('') }) });
+      const d = await res.json().catch(() => null);               // non-JSON = no API here (e.g. static preview)
+      if (!d) throw new Error('The wall is offline right now — try again on the live site.');
+      if (!d.success) throw new Error(d.message);
+      wall.querySelector('.gb-empty')?.remove(); addTile(d.item, true);
+      px.fill(0); draw(); $('#gbName').value = ''; msg.textContent = 'Signed — thanks! ✦';
+    } catch (err) { msg.textContent = err.message || 'Could not sign right now.'; }
+    btn.disabled = false;
+  });
+})();

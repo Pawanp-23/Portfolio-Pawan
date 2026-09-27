@@ -69,6 +69,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Instrument+Serif:ital@1&family=Onest:wght@300;400;500;600&family=Pixelify+Sans:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
+  <script>try{var t=localStorage.getItem('theme');document.documentElement.dataset.theme=t||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark')}catch(e){document.documentElement.dataset.theme='dark'}</script>
 </head>
 <body>
 
@@ -91,6 +92,7 @@
       <li><a href="#work">Work</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#life">Life</a></li>
+      <li><button class="theme-btn" id="themeBtn" type="button" aria-label="Switch to light theme"><span class="theme-knob"></span></button></li>
       <li><a href="#contact" class="nav-cta" data-contact>Say hi</a></li>
     </ul>
   </nav>
@@ -185,6 +187,30 @@
       <p class="lede reveal">Problems first, models second. Each of these started as a “what if” and ended as something that actually runs.</p>
     </header>
     <ul class="work-grid" id="workGrid"></ul>
+
+    <!-- Break my warehouse: simulated race for the last box -->
+    <article class="glass race reveal" id="race" aria-labelledby="raceTitle">
+      <div class="race-copy">
+        <p class="kicker mono">◦ BREAK MY WAREHOUSE ◦</p>
+        <h3 class="race-title" id="raceTitle">Two customers. One box. Who wins?</h3>
+        <p class="muted">Whitfield’s hardest problem, as a game: two orders hit the last box at the same moment. A naive system checks stock twice and sells a box it doesn’t have. Whitfield reserves atomically — only one order can win.</p>
+        <div class="race-modes" role="radiogroup" aria-label="Inventory mode">
+          <button class="race-mode" role="radio" aria-checked="false" data-mode="naive">Naive check-then-write</button>
+          <button class="race-mode is-on" role="radio" aria-checked="true" data-mode="atomic">Atomic (Whitfield)</button>
+        </div>
+      </div>
+      <div class="race-stage">
+        <div class="shelf" id="shelf"><span class="mono shelf-label">STOCK</span><span class="shelf-count" id="stockCount">1</span><span class="shelf-box" aria-hidden="true">📦</span></div>
+        <div class="race-btns">
+          <button class="btn btn-glass btn-sm" data-order="A">Order A</button>
+          <button class="btn btn-accent btn-sm" id="raceBoth">⚡ Race both</button>
+          <button class="btn btn-glass btn-sm" data-order="B">Order B</button>
+        </div>
+        <ol class="race-log mono" id="raceLog" aria-live="polite"></ol>
+        <p class="race-verdict" id="raceVerdict">Press ⚡ Race both.</p>
+        <button class="link-arrow race-reset" id="raceReset" type="button">↺ Restock</button>
+      </div>
+    </article>
 
     <div class="commits">
       <p class="kicker mono reveal center">◦ THE COMMIT LOG ◦</p>
@@ -316,6 +342,29 @@
       <a class="btn btn-glass sp-link" id="spLink" href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">Open Spotify ↗</a>
       <div class="sp-embed" id="spEmbed" aria-hidden="true"></div>
     </article>
+  </section>
+
+  <!-- Pixel guestbook -->
+  <section id="guestbook" class="section">
+    <header class="section-head">
+      <div>
+        <p class="kicker mono reveal">◦ SIGN THE WALL ◦</p>
+        <h2 class="display reveal">Leave a <em>pixel</em>.</h2>
+      </div>
+      <p class="lede reveal">Draw a tiny 16×16 doodle, sign it, and it joins the wall. One per visitor per day.</p>
+    </header>
+    <div class="gb">
+      <form class="glass gb-pad reveal" id="gbForm" novalidate>
+        <canvas id="gbCanvas" width="320" height="320" aria-label="16 by 16 drawing grid"></canvas>
+        <div class="gb-palette" id="gbPalette" role="radiogroup" aria-label="Colour"></div>
+        <div class="gb-row">
+          <input id="gbName" maxlength="20" placeholder="Your name" autocomplete="nickname" aria-label="Your name" />
+          <button class="btn btn-accent btn-sm" type="submit" id="gbSubmit">Sign ↗</button>
+        </div>
+        <div class="gb-row gb-tools"><button type="button" class="link-arrow" id="gbClear">Clear</button><span class="gb-msg mono" id="gbMsg" aria-live="polite"></span></div>
+      </form>
+      <ul class="gb-wall" id="gbWall" aria-label="Guestbook signatures"></ul>
+    </div>
   </section>
 
 </main>

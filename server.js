@@ -13,6 +13,7 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import contactHandler from './api/contact.js';
 import spotifyHandler from './api/spotify.js';
+import guestbookHandler from './api/guestbook.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app  = express();
@@ -69,6 +70,10 @@ app.post('/api/contact', async (req, res) => {
 
 app.get('/api/spotify', async (req, res) => {
   await spotifyHandler(req, res);
+});
+
+app.all('/api/guestbook', async (req, res) => {
+  await guestbookHandler(req, res);
 });
 
 // ── Static frontend ───────────────────────────────────────────────────────────

@@ -6,6 +6,10 @@
       "dest": "/api/$1"
     },
     {
+      "src": "/google1501ae5119333ad8.html",
+      "dest": "/public/google1501ae5119333ad8.html"
+    },
+    {
       "src": "/(.*\\.(css|js|mjs|json|png|jpg|jpeg|gif|svg|webp|avif|ico|woff|woff2|ttf|eot|txt|xml|webmanifest|pdf))",
       "dest": "/public/$1"
     },

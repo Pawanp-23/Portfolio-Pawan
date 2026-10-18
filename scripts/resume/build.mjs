@@ -1,5 +1,6 @@
 // Renders scripts/resume/resume.html to public/Pawan_Patil_Resume.pdf with headless Edge/Chrome.
-// Usage: node scripts/resume/build.mjs   (set BROWSER=path/to/chrome to override the browser)
+// Usage: node scripts/resume/build.mjs [input.html] [output.pdf]
+//   defaults: resume.html -> public/Pawan_Patil_Resume.pdf   (set BROWSER=path/to/chrome to override the browser)
 import { spawn } from 'node:child_process';
 import { writeFileSync, existsSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -7,8 +8,9 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const src = pathToFileURL(path.join(here, 'resume.html')).href;
-const out = path.join(here, '..', '..', 'public', 'Pawan_Patil_Resume.pdf');
+const [, , inArg, outArg] = process.argv;
+const src = pathToFileURL(path.resolve(inArg || path.join(here, 'resume.html'))).href;
+const out = path.resolve(outArg || path.join(here, '..', '..', 'public', 'Pawan_Patil_Resume.pdf'));
 
 const candidates = [
   process.env.BROWSER,

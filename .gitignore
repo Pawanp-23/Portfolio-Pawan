@@ -22,3 +22,6 @@ Thumbs.db
 
 # Original monolith — not needed (clean version is in public/)
 index-8.html
+
+# Tailored résumés / cover notes for specific applications (kept local)
+applications/

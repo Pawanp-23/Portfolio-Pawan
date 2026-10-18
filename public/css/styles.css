@@ -291,6 +291,8 @@ body.ready .avatar{opacity:1;transform:none}
 .hscroll.is-h .work-card{gap:1.1rem}
 .hscroll.is-h .work-card .work-desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 @media (max-height:880px){.hscroll.is-h .work-card .work-desc{display:none}.hscroll.is-h .hscroll-pin{gap:1rem}}
+@media (max-height:800px){.hscroll.is-h .work-card .tags{display:none}.hscroll.is-h .hscroll-pin{padding-top:4.6rem}.hscroll.is-h .work-card{gap:.9rem}}
+@media (max-height:680px){.hscroll.is-h .work-grid{--cw:clamp(280px, min(34vw, 52vh), 520px)}.hscroll.is-h .hscroll-pin{padding-top:4.4rem;gap:.75rem}.hscroll.is-h .work-card .work-headline{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.hscroll.is-h .work-card .work-meta{margin-top:.3rem}}
 
 .hscroll.is-swipe .hscroll-bar{display:flex;margin-bottom:1.25rem}
 .hscroll.is-swipe .hscroll-bar span:first-child::before{content:"Swipe → "}
@@ -303,21 +305,21 @@ body.ready .avatar{opacity:1;transform:none}
 .hscroll.is-swipe .work-grid::-webkit-scrollbar{display:none}
 .hscroll.is-swipe .work-grid > li{flex:0 0 min(86vw, 30rem);scroll-snap-align:center}
 
-/* ── More projects ─────────────────────────────────────────────────────────── */
-.more{display:flex;flex-direction:column;align-items:center;margin-top:2.5rem}
-.more-count{display:inline-grid;place-items:center;min-width:1.5rem;height:1.5rem;padding:0 .4rem;border-radius:999px;background:var(--accent);color:#fff;font-size:.62rem;letter-spacing:0}
-.more-chev{display:inline-block;transition:transform .5s var(--ease)}
-.more-btn[aria-expanded=true] .more-chev{transform:rotate(180deg)}
-.more-panel{display:grid;grid-template-rows:0fr;width:100%;opacity:0;transition:grid-template-rows .7s var(--ease), opacity .5s, margin .7s var(--ease)}
-.more-panel.open{grid-template-rows:1fr;opacity:1;margin-top:1.5rem}
-.more-list{min-height:0;overflow:hidden;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,26rem),36rem));justify-content:center;gap:1rem}
-.more-item{padding:1.5rem 1.6rem;display:grid;gap:.8rem}
-.more-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap}
-.more-name{font-family:var(--f-display);font-weight:400;font-size:1.45rem;line-height:1.1}
-.more-meta{color:var(--subtle);font-size:.62rem;letter-spacing:.12em}
-.more-desc{color:var(--muted);font-weight:300;font-size:.95rem;line-height:1.7}
-.more-foot{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem}
-.more-foot .tags{flex:1 1 100%;margin-bottom:.2rem}
+/* ── More projects: closing card at the end of the gallery ─────────────────── */
+.more-card{justify-content:flex-start;background:
+  radial-gradient(420px circle at var(--mx,50%) var(--my,-40%), rgba(229,25,44,.10), transparent 60%),
+  repeating-linear-gradient(135deg, transparent 0 14px, rgba(255,255,255,.018) 14px 15px),
+  linear-gradient(180deg, var(--glass-hi), var(--glass))}
+.more-card .more-title{font-family:var(--f-display);font-weight:400;font-size:clamp(1.8rem,2.8vw,2.4rem);line-height:1.05;margin-top:1.5rem;margin-bottom:.25rem}
+.more-card .more-title em{font-family:var(--f-italic);font-style:italic;color:var(--accent)}
+.more-list{display:grid;gap:1rem}
+.more-item{display:grid;gap:.65rem;padding-top:1rem;border-top:1px solid var(--line)}
+.more-head{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+.more-name{font-weight:500;font-size:1.1rem;letter-spacing:-.01em;color:var(--ink)}
+.more-meta{color:var(--subtle);font-size:.6rem;letter-spacing:.12em}
+.more-card .more-desc{font-size:.92rem;font-weight:300;line-height:1.65;color:var(--muted)}
+.more-links{display:flex;flex-wrap:wrap;gap:.5rem}
+.hscroll.is-h .more-card .more-desc{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 
 /* ── Motion layer (only when motion is allowed) ────────────────────────────── */
 .scroll-progress{position:fixed;inset:0 0 auto;z-index:60;height:2px;pointer-events:none}

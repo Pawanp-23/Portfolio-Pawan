@@ -153,26 +153,26 @@ $('#workGrid').innerHTML = projects.map((p,i) => `
     </article>
   </li>`).join('');
 
-$('#moreCount').textContent = moreProjects.length;
-$('#moreList').innerHTML = moreProjects.map(p => `
-  <li class="glass more-item">
-    <div class="more-head">
-      <h3 class="more-name">${esc(p.name)}</h3>
-      <span class="mono more-meta">${esc(p.cat)} · ${esc(p.year)}</span>
-    </div>
-    <p class="more-desc">${esc(p.desc)}</p>
-    <div class="more-foot">
-      <div class="tags">${p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
-      ${p.live ? `<a class="btn btn-accent btn-sm" href="${p.live}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} live site">Live site ↗</a>` : ''}
-      <a class="btn btn-glass btn-sm" href="${GITHUB}${p.repo}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} source on GitHub">${GH_ICON} GitHub</a>
-    </div>
-  </li>`).join('');
-$('#moreBtn').addEventListener('click', e => {
-  const btn = e.currentTarget, open = btn.getAttribute('aria-expanded') !== 'true';
-  btn.setAttribute('aria-expanded', open);
-  $('#morePanel').classList.toggle('open', open);
-  $('#morePanel').inert = !open;
-});
+// Last stop in the gallery: the smaller builds, as one closing card on the right
+$('#workGrid').insertAdjacentHTML('beforeend', `
+  <li class="reveal">
+    <article class="glass work-card more-card">
+      <div class="work-meta mono"><span>+${moreProjects.length} · More projects</span><span>→</span></div>
+      <h3 class="more-title">And a few <em>more</em>.</h3>
+      <ul class="more-list">${moreProjects.map(p => `
+        <li class="more-item">
+          <div class="more-head"><span class="more-name">${esc(p.name)}</span><span class="mono more-meta">${esc(p.cat)}</span></div>
+          <p class="more-desc">${esc(p.desc)}</p>
+          <div class="tags">${p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+          <div class="more-links">
+            ${p.live ? `<a class="btn btn-accent btn-sm" href="${p.live}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} live site">Live site ↗</a>` : ''}
+            <a class="btn btn-glass btn-sm" href="${GITHUB}${p.repo}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} source on GitHub">${GH_ICON} GitHub</a>
+          </div>
+        </li>`).join('')}
+      </ul>
+      <div class="work-links"><a class="btn btn-ghost btn-sm" href="https://github.com/Pawanp-23?tab=repositories" target="_blank" rel="noopener noreferrer">All repositories ↗</a></div>
+    </article>
+  </li>`);
 
 const timeline = items => items.map(t => `
   <li class="${t.now?'now':''}">
@@ -840,7 +840,7 @@ if (!reduceMotion) (() => {
   const cards = [...track.children];
   const fill = $('#hsFill'), now = $('#hsNow');
   $('#hsAll').textContent = String(cards.length).padStart(2, '0');
-  const wide = matchMedia('(min-width:900px) and (min-height:740px)');
+  const wide = matchMedia('(min-width:900px) and (min-height:600px)');
   let mode = '', dist = 0;
   let shown = -1;
   const setCount = i => {

@@ -90,12 +90,15 @@
 <!-- Nav -->
 <header class="nav-wrap">
   <nav class="nav glass" aria-label="Primary">
-    <a class="nav-brand" href="#home"><span class="nav-avatar"><img src="/img/avatar.jpg" alt="" /></span><span class="nav-name">Pawan Patil</span></a>
+    <a class="nav-brand" href="#home"><span class="nav-avatar"><img src="/img/avatar.webp" alt="" /></span><span class="nav-name">Pawan Patil</span></a>
     <ul class="nav-links">
       <li class="hide-xs"><a href="#honor">Shipped</a></li>
       <li><a href="#work">Work</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#life">Life</a></li>
+      <li class="hide-nav-sm"><button class="sound-btn" id="soundBtn" type="button" aria-pressed="false" aria-label="Turn sound on" title="Sound (off)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 9.5h3.2L12 5.6v12.8l-4.8-3.9H4z"/><path class="snd-off" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="m16 9.5 5 5m0-5-5 5"/><path class="snd-on" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M15.5 9.2a4 4 0 0 1 0 5.6M18.2 6.6a7.6 7.6 0 0 1 0 10.8"/></svg>
+      </button></li>
       <li><button class="theme-btn" id="themeBtn" type="button" aria-label="Switch to light theme"><span class="theme-knob"></span></button></li>
       <li><a href="#contact" class="nav-cta" data-contact>Say hi</a></li>
     </ul>
@@ -110,7 +113,7 @@
     <div class="hero-lines" aria-hidden="true"></div>
 
     <button class="avatar" id="avatar" type="button" aria-label="Pawan's photo — hover or tap to reveal">
-      <img src="/img/avatar.jpg" alt="Portrait of Pawan Patil" />
+      <img src="/img/avatar.webp" alt="Portrait of Pawan Patil" />
       <canvas id="halftone" aria-hidden="true"></canvas>
     </button>
 
@@ -120,8 +123,8 @@
     </h1>
 
     <p class="hero-sub reveal" style="--d:.32s">
-      An IT engineer with an ENTC foundation. Currently building AI-powered products —
-      voice agents, RAG systems and connected hardware — out of Nagpur, India.
+      Forward Deployed Engineer intern at <a class="hero-link" href="https://eigi.ai" target="_blank" rel="noopener noreferrer">Eigi AI</a>, where I shipped the official eigi.ai.
+      An IT engineer with an ENTC foundation, building voice agents, RAG systems and connected hardware out of Nagpur, India.
     </p>
 
     <div class="hero-cta reveal" style="--d:.44s">
@@ -176,15 +179,15 @@
       <div class="honor-shots" aria-hidden="true">
         <div class="face face-shot honor-back">
           <span class="face-bar"><i></i><i></i><i></i><span class="face-url mono">admin.eigi.ai</span></span>
-          <img src="/img/eigi-admin.jpg" alt="" loading="lazy" />
+          <img src="/img/eigi-admin.webp" alt="" loading="lazy" />
         </div>
         <a class="face face-shot honor-mid" href="https://fde.eigi.ai" target="_blank" rel="noopener noreferrer" tabindex="-1">
           <span class="face-bar"><i></i><i></i><i></i><span class="face-url mono">fde.eigi.ai</span></span>
-          <img src="/img/eigi-fde.jpg" alt="" loading="lazy" />
+          <img src="/img/eigi-fde.webp" alt="" loading="lazy" />
         </a>
         <a class="face face-shot honor-front" href="https://eigi.ai" target="_blank" rel="noopener noreferrer" tabindex="-1">
           <span class="face-bar"><i></i><i></i><i></i><span class="face-url mono">eigi.ai</span></span>
-          <img src="/img/eigi-main.jpg" alt="" loading="lazy" />
+          <img src="/img/eigi-main.webp" alt="" loading="lazy" />
         </a>
       </div>
     </article>
@@ -199,7 +202,26 @@
       </div>
       <p class="lede reveal">Problems first, models second. Each of these started as a “what if” and ended as something that actually runs.</p>
     </header>
-    <ul class="work-grid" id="workGrid"></ul>
+    <!-- Pinned horizontal gallery: vertical scroll drives a sideways 3D track (swipe carousel on touch) -->
+    <div class="hscroll" id="hscroll">
+      <div class="hscroll-pin">
+        <div class="hscroll-bar mono" aria-hidden="true">
+          <span>← Scroll to browse →</span>
+          <span class="hscroll-progress"><i id="hsFill"></i></span>
+          <span><b id="hsNow">01</b> / <span id="hsAll">04</span></span>
+        </div>
+        <ul class="work-grid" id="workGrid"></ul>
+      </div>
+    </div>
+
+    <div class="more reveal">
+      <button class="btn btn-glass more-btn" id="moreBtn" type="button" aria-expanded="false" aria-controls="morePanel">
+        More projects <span class="more-count mono" id="moreCount">0</span> <span class="more-chev" aria-hidden="true">↓</span>
+      </button>
+      <div class="more-panel" id="morePanel" inert>
+        <ul class="more-list" id="moreList"></ul>
+      </div>
+    </div>
 
     <!-- Break my warehouse: simulated race for the last box -->
     <article class="glass race reveal" id="race" aria-labelledby="raceTitle">
@@ -285,7 +307,7 @@
       </article>
 
       <figure class="glass portrait reveal">
-        <img src="/img/portrait.jpg" alt="Pawan Patil in a black suit against a red background" loading="lazy" />
+        <img src="/img/portrait.webp" alt="Pawan Patil in a black suit against a red background" loading="lazy" />
       </figure>
 
       <article class="glass card exp reveal">

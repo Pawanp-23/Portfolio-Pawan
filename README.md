@@ -31,7 +31,7 @@ The personal portfolio of **Pawan Patil** — AI Product Engineer & Forward Depl
 api/            serverless functions: contact, guestbook, spotify
 server/         db connection, mailer, validators, Mongoose models
 public/         the site: index.html, css/, js/, img/, SEO files
-scripts/        spotify-token.js (one-time Spotify refresh token helper)
+scripts/        spotify-token.js (Spotify refresh token helper) · resume/ (résumé source + PDF build)
 server.js       local Express server that mirrors the Vercel routes
 ```
 
@@ -40,6 +40,12 @@ server.js       local Express server that mirrors the Vercel routes
 npm install
 cp .env.example .env   # MongoDB, Gmail app password, optional Spotify keys
 npm run dev            # http://localhost:3000
+```
+
+## Update the résumé
+Edit `scripts/resume/resume.html`, then rebuild the PDF (uses your installed Edge or Chrome; warns if it spills past one page):
+```sh
+node scripts/resume/build.mjs   # writes public/Pawan_Patil_Resume.pdf
 ```
 
 ## Contact

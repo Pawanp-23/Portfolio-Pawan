@@ -10,17 +10,27 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const GITHUB = 'https://github.com/Pawanp-23/';
 const projects = [
   { name:'LRN', cat:'EdTech · Finance prep', year:'2026',
-    live:'https://lrn-client.vercel.app', repo:'LRN', shot:'/img/project-lrn.jpg',
-    headline:'A 30-question diagnostic that shows finance candidates where they actually stand.',
-    desc:'Accounting, valuation, M&A and LBO questions with instant grading, a report and a focused practice plan — shipped as a React SPA with CI for lint, tests and build.',
+    live:'https://lrnprep.com', repo:'LRN', shot:'/img/project-lrn.webp',
+    headline:'An interview-readiness diagnostic that shows finance candidates where they’d actually stand in the room.',
+    desc:'Questions across accounting, valuation, M&A, LBOs, markets and judgment with instant feedback, a report and a focused practice plan — live at lrnprep.com.',
     tags:['React','TypeScript','Vite','CI'] },
+  { name:'RAMEI', cat:'Multimodal AI · Internship', year:'2026',
+    repo:'Emotion_Intelligence', shot:'/img/project-ramei.webp',
+    headline:'Emotion AI that knows when to trust your voice, your words or your face — and when to say “unsure”.',
+    desc:'Reliability-aware multimodal emotion recognition: WavLM, Whisper + DeBERTa and a face ViT fused per moment, with calibrated confidence, abstention and explanations in a React dashboard.',
+    tags:['React','TypeScript','FastAPI','PyTorch','WebSocket'] },
+  { name:'BlindSpot', cat:'PromptWars · Google × Hack2Skill', year:'2026',
+    live:'https://blindspot-s5sh.onrender.com', repo:'Pawan_patil_PROMPTWARS', shot:'/img/project-blindspot.webp', sleeps:true,
+    headline:'A thinking companion that finds the blind spots in your reasoning — and never decides for you.',
+    desc:'Talk a decision through with a voice agent; Gemini maps what your reasoning covers, flags assumptions, conflicts and thinking traps, and asks one better question per gap.',
+    tags:['React','TypeScript','Express','Gemini','Firestore'] },
   { name:'CityCare Clinic', cat:'Healthcare · AI', year:'2026',
-    live:'https://citycare-frontend-wlw8.onrender.com', repo:'City_Care', shot:'/img/project-citycare.jpg', sleeps:true,
+    live:'https://citycare-frontend-wlw8.onrender.com', repo:'City_Care', shot:'/img/project-citycare.webp', sleeps:true,
     headline:'A clinic where doctors can ask the AI about their day — but it can’t touch bookings.',
     desc:'Four-role appointment system for a Nagpur hospital with race-safe slot booking and a Gemini function-calling assistant that is read-only by design.',
     tags:['React','FastAPI','MongoDB','Gemini','JWT'] },
   { name:'Whitfield WMS', cat:'Logistics · SaaS', year:'2026',
-    live:'https://whitfield-frontend.onrender.com', repo:'Warehouse-Management-System', shot:'/img/project-whitfield.jpg', sleeps:true,
+    live:'https://whitfield-frontend.onrender.com', repo:'Warehouse-Management-System', shot:'/img/project-whitfield.webp', sleeps:true,
     api:'https://whitfield-api.onrender.com/docs',
     headline:'Warehouse software that won’t let two orders grab the same last box.',
     desc:'Multi-tenant 3PL platform: receiving, atomic inventory reservations, shipments and tracking, invoicing, realtime WebSocket updates and grounded RAG chat.',
@@ -30,6 +40,13 @@ const projects = [
     headline:'Spotting burnout before it happens — and explaining why.',
     desc:'SIH26186: privacy-preserving welfare intelligence that flags occupational stress and fatigue risk, explains causes with SHAP and simulates interventions.',
     tags:['React','Express','Gemini','SHAP','Recharts'] },
+];
+
+// Smaller builds, listed under "More projects" (no screenshot needed)
+const moreProjects = [
+  { name:'Pallotti Voice Agent', cat:'Voice AI · Admissions', year:'2026', repo:'Pallotti-voice-agent',
+    desc:'An AI admissions voice agent for a college: talk to “Aanya” on the web or by phone (Twilio), with Gemini capturing leads, callbacks and application drafts for a staff console.',
+    tags:['React','Express','Gemini','Twilio','SQLite'] },
 ];
 
 // Newest first. Source: résumé (Sep 2026)
@@ -65,18 +82,18 @@ const method = [
 
 // "When the laptop's closed" — order fills a 3×2 grid; the feature card spans two rows in the middle.
 const life = [
-  { type:'card', img:'/img/hobby-cooking.jpg', alt:'Pan-seared pepper chilli chicken', kicker:'Kitchen',
+  { type:'card', img:'/img/hobby-cooking.webp', alt:'Pan-seared pepper chilli chicken', kicker:'Kitchen',
     title:'Cooking without a recipe', text:'Pepper, chilli flakes, oregano and a hot pan. Basically debugging, but tastier.',
     stat:{ label:'Spice level', val:'High', em:'always' } },
   { type:'feature', imgs:[
-      { src:'/img/hobby-trek-clouds.jpg', alt:'Pawan standing at a viewpoint over a misty forest', pos:'36% 50%' },
+      { src:'/img/hobby-trek-clouds.webp', alt:'Pawan standing at a viewpoint over a misty forest', pos:'36% 50%' },
     ],
     overlay:[['Signal','0 bars'],['View','Worth it'],['Status','Offline']],
     kicker:'Outdoors', title:'Chasing viewpoints', text:'Cliff edges and forest horizons — the only places my phone stays in my pocket.' },
-  { type:'card', img:'/img/hobby-gym.jpg', alt:'Back progress photo in the mirror', pos:'70% 40%', kicker:'Strength',
+  { type:'card', img:'/img/hobby-gym.webp', alt:'Back progress photo in the mirror', pos:'70% 40%', kicker:'Strength',
     title:'Building the back', text:'Best thinking happens between sets.',
     stat:{ label:'Rest days', val:'Few', em:'for now' } },
-  { type:'card', img:'/img/hobby-heritage.jpg', alt:'Ancient stone temple ruins beside a pond', kicker:'Heritage',
+  { type:'card', img:'/img/hobby-heritage.webp', alt:'Ancient stone temple ruins beside a pond', kicker:'Heritage',
     title:'Old stones, long stories', text:'Exploring ancient temples — engineering that has outlasted every framework I’ll ever use.',
     stat:{ label:'Uptime', val:'Centuries', em:'zero downtime' } },
   { type:'now' },
@@ -107,8 +124,8 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>'
 const GH_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.9.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.1.9 2.2v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>';
 
 const face = p => p.shot ? `
-  <a class="face face-shot" href="${p.live}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
-    <span class="face-bar"><i></i><i></i><i></i><span class="face-url mono">${esc(p.live.replace(/^https?:\/\//,''))}</span></span>
+  <a class="face face-shot" href="${p.live || GITHUB + p.repo}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+    <span class="face-bar"><i></i><i></i><i></i><span class="face-url mono">${esc((p.live || GITHUB + p.repo).replace(/^https?:\/\//,''))}</span></span>
     <img src="${p.shot}" alt="" loading="lazy" />
   </a>` : `
   <a class="face face-title" href="${GITHUB}${p.repo}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
@@ -121,8 +138,11 @@ $('#workGrid').innerHTML = projects.map((p,i) => `
     <article class="glass work-card">
       ${face(p)}
       <div class="work-meta mono"><span>0${i+1} · ${esc(p.cat)}</span><span>${esc(p.year)}</span></div>
-      <h3>${esc(p.headline)}</h3>
-      <p><span class="work-name">${esc(p.name)}</span> — ${esc(p.desc)}</p>
+      <div class="work-text">
+        <h3 class="work-name">${esc(p.name)}</h3>
+        <p class="work-headline">${esc(p.headline)}</p>
+        <p class="work-desc">${esc(p.desc)}</p>
+      </div>
       <div class="tags">${p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
       <div class="work-links">
         ${p.live ? `<a class="btn btn-accent btn-sm" href="${p.live}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} live site">Live site ↗</a>` : ''}
@@ -132,6 +152,27 @@ $('#workGrid').innerHTML = projects.map((p,i) => `
       </div>
     </article>
   </li>`).join('');
+
+$('#moreCount').textContent = moreProjects.length;
+$('#moreList').innerHTML = moreProjects.map(p => `
+  <li class="glass more-item">
+    <div class="more-head">
+      <h3 class="more-name">${esc(p.name)}</h3>
+      <span class="mono more-meta">${esc(p.cat)} · ${esc(p.year)}</span>
+    </div>
+    <p class="more-desc">${esc(p.desc)}</p>
+    <div class="more-foot">
+      <div class="tags">${p.tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+      ${p.live ? `<a class="btn btn-accent btn-sm" href="${p.live}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} live site">Live site ↗</a>` : ''}
+      <a class="btn btn-glass btn-sm" href="${GITHUB}${p.repo}" target="_blank" rel="noopener noreferrer" aria-label="${esc(p.name)} source on GitHub">${GH_ICON} GitHub</a>
+    </div>
+  </li>`).join('');
+$('#moreBtn').addEventListener('click', e => {
+  const btn = e.currentTarget, open = btn.getAttribute('aria-expanded') !== 'true';
+  btn.setAttribute('aria-expanded', open);
+  $('#morePanel').classList.toggle('open', open);
+  $('#morePanel').inert = !open;
+});
 
 const timeline = items => items.map(t => `
   <li class="${t.now?'now':''}">
@@ -467,6 +508,7 @@ function initSpotify(){
     if (d > 180) d -= 360; else if (d < -180) d += 360;
     scratch.turned += d; spin += d;
     disc.style.transform = `rotate(${spin}deg)`;
+    sfx('scratch', Math.abs(d));
     el.status.textContent = `Scratching ${scratch.turned >= 0 ? '⏩' : '⏪'} ${(Math.abs(scratch.turned) / 45).toFixed(1)} s`;
   });
   const release = async () => {
@@ -576,6 +618,285 @@ const observeReveals = () => document.querySelectorAll('.reveal:not(.in)').forEa
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Motion — one rAF-throttled scroll loop drives every scroll-linked effect
+// ─────────────────────────────────────────────────────────────────────────────
+const finePointer = matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Sound — tiny synthesized UI sounds (Web Audio, no files). Off by default.
+// ─────────────────────────────────────────────────────────────────────────────
+const sfx = (() => {
+  const btn = $('#soundBtn');
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!btn || !AC){ btn?.closest('li')?.remove(); return () => {}; }
+  let on = false, ctx = null, master = null, noise = null, bed = null, bedWanted = false, lastHover = 0, lastScratch = 0;
+  try { on = localStorage.getItem('sound') === 'on'; } catch {}
+
+  const init = () => {
+    if (ctx) return ctx.state === 'suspended' ? ctx.resume() : null;
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value = .55; master.connect(ctx.destination);
+    noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+    const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  };
+  const env = (node, t, peak, len) => {
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(peak, t + .005);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+    node.connect(g); g.connect(master); return g;
+  };
+  const tone = (type, f0, f1, len, peak) => {
+    const t = ctx.currentTime, o = ctx.createOscillator();
+    o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + len);
+    env(o, t, peak, len); o.start(t); o.stop(t + len + .02);
+  };
+  const hiss = (type, f0, f1, len, peak, q = 1) => {
+    const t = ctx.currentTime, s = ctx.createBufferSource(), f = ctx.createBiquadFilter();
+    s.buffer = noise; f.type = type; f.Q.value = q;
+    f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(f1, t + len);
+    s.connect(f); env(f, t, peak, len); s.start(t, Math.random() * .5); s.stop(t + len + .02);
+  };
+  const sounds = {
+    hover:  () => tone('sine', 2600, 1900, .045, .025),
+    click:  () => { tone('triangle', 520, 240, .07, .07); hiss('highpass', 3000, 3000, .02, .02); },
+    crt:    () => { tone('sine', 110, 45, .18, .16); hiss('bandpass', 2400, 600, .28, .07, .8); },
+    whoosh: () => hiss('bandpass', 380, 1900, .26, .045, 1.4),
+    scratch: v => hiss('bandpass', 500 + Math.min(v, 30) * 90, 300 + Math.min(v, 30) * 60, .06, .06, 2.5),
+  };
+
+  // Vinyl crackle bed: sparse pops over a soft hiss, looped while the Spotify card is in view
+  const crackle = () => {
+    const len = ctx.sampleRate * 3, b = ctx.createBuffer(1, len, ctx.sampleRate), d = b.getChannelData(0);
+    for (let i = 0; i < len; i++){
+      d[i] = (Math.random() * 2 - 1) * .035;
+      if (Math.random() < .0006){ const amp = Math.random() * .9; for (let k = 0; k < 40 && i + k < len; k++) d[i + k] += (Math.random() * 2 - 1) * amp * Math.exp(-k / 6); }
+    }
+    return b;
+  };
+  const setBed = want => {
+    bedWanted = want;
+    if (!ctx) return;
+    const playing = want && on;
+    if (playing && !bed){
+      const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+      s.buffer = crackle(); s.loop = true; f.type = 'lowpass'; f.frequency.value = 5200;
+      g.gain.setValueAtTime(0, ctx.currentTime); g.gain.linearRampToValueAtTime(.22, ctx.currentTime + .8);
+      s.connect(f); f.connect(g); g.connect(master); s.start();
+      bed = { s, g };
+    } else if (!playing && bed){
+      const { s, g } = bed; bed = null;
+      g.gain.linearRampToValueAtTime(0, ctx.currentTime + .5); s.stop(ctx.currentTime + .55);
+    }
+  };
+  const sp = $('#spotify');
+  if (sp) new IntersectionObserver(([en]) => setBed(en.isIntersecting), { threshold:.35 }).observe(sp);
+
+  const render = () => {
+    btn.setAttribute('aria-pressed', on);
+    btn.setAttribute('aria-label', on ? 'Turn sound off' : 'Turn sound on');
+    btn.title = on ? 'Sound (on)' : 'Sound (off)';
+    btn.classList.toggle('on', on);
+  };
+  btn.addEventListener('click', () => {
+    on = !on;
+    try { localStorage.setItem('sound', on ? 'on' : 'off'); } catch {}
+    if (on){ init(); sounds.click(); }
+    setBed(bedWanted);
+    render();
+  });
+  // A remembered "on" still needs a user gesture before audio can start
+  addEventListener('pointerdown', () => { if (on && (!ctx || ctx.state !== 'running')){ init(); setBed(bedWanted); } }, { capture:true });
+
+  const play = (name, v) => {
+    if (!on || !ctx || ctx.state !== 'running') return;
+    const now = performance.now();
+    if (name === 'hover'){ if (now - lastHover < 70) return; lastHover = now; }
+    if (name === 'scratch'){ if (now - lastScratch < 45) return; lastScratch = now; }
+    sounds[name]?.(v);
+  };
+  if (finePointer) document.addEventListener('pointerover', e => {
+    const t = e.target.closest?.('a, button, [role=radio]');
+    if (t && !t.contains(e.relatedTarget)) play('hover');
+  }, { passive:true });
+  document.addEventListener('click', e => {
+    if (e.target.closest?.('#themeBtn')) play('crt');
+    else if (e.target.closest?.('a, button, [role=radio]') && !e.target.closest('#soundBtn')) play('click');
+  }, true);
+  render();
+  return play;
+})();
+const scrollHooks = [];
+let ticking = false;
+const runScrollHooks = () => { ticking = false; scrollHooks.forEach(f => f()); };
+const requestScrollTick = () => { if (!ticking){ ticking = true; requestAnimationFrame(runScrollHooks); } };
+addEventListener('scroll', requestScrollTick, { passive:true });
+addEventListener('resize', requestScrollTick);
+const clamp = (v, a=0, b=1) => Math.min(b, Math.max(a, v));
+if (!reduceMotion) document.documentElement.classList.add('motion');
+
+// Section headings rise in word by word (an <em> stays one unit)
+if (!reduceMotion) document.querySelectorAll('.display, .footer-title').forEach(h => {
+  let i = 0;
+  const wrap = node => { const w = document.createElement('span'); w.className = 'w'; const s = document.createElement('span'); s.style.setProperty('--i', i++); s.append(node); w.append(s); return w; };
+  [...h.childNodes].forEach(n => {
+    if (n.nodeType === 3){
+      const frag = document.createDocumentFragment();
+      n.textContent.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        frag.append(/^\s+$/.test(part) ? document.createTextNode(part) : wrap(document.createTextNode(part)));
+      });
+      n.replaceWith(frag);
+    } else if (n.nodeName !== 'BR') n.replaceWith(wrap(n.cloneNode(true)));
+  });
+  h.classList.add('split');
+});
+
+// Reading progress bar
+(() => {
+  const bar = document.createElement('div');
+  bar.className = 'scroll-progress'; bar.setAttribute('aria-hidden', 'true'); bar.innerHTML = '<i></i>';
+  document.body.append(bar);
+  const fill = bar.firstChild;
+  scrollHooks.push(() => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    fill.style.transform = `scaleX(${max > 0 ? clamp(scrollY / max) : 0})`;
+  });
+})();
+
+// Hero drifts back as you scroll away from it
+if (!reduceMotion) (() => {
+  const title = $('.hero-title'), avatar = $('#avatar'), glow = $('.hero .hero-glow'), status = $('.hero-status');
+  scrollHooks.push(() => {
+    const p = clamp(scrollY / innerHeight);
+    if (p >= 1 && title.dataset.gone) return;
+    title.dataset.gone = p >= 1 ? '1' : '';
+    title.style.transform = `translate3d(0,${-p*90}px,0) scale(${1 - p*.12})`;
+    title.style.opacity = 1 - p*1.1;
+    avatar.style.translate = `0 ${-p*140}px`;
+    avatar.style.rotate = `${p*-8}deg`;
+    if (glow) glow.style.transform = `scale(${1 + p*.6})`;
+    if (status) status.style.opacity = 1 - p*2;
+  });
+})();
+
+// Work gallery — desktop: vertical scroll drives a pinned, curved 3D track
+// small screens: native horizontal swipe carousel · reduced motion on desktop: plain grid
+(() => {
+  const wrap = $('#hscroll'), track = $('#workGrid');
+  if (!wrap || !track) return;
+  const cards = [...track.children];
+  const fill = $('#hsFill'), now = $('#hsNow');
+  $('#hsAll').textContent = String(cards.length).padStart(2, '0');
+  const wide = matchMedia('(min-width:900px) and (min-height:740px)');
+  let mode = '', dist = 0;
+  let shown = -1;
+  const setCount = i => {
+    if (i === shown) return;
+    if (shown !== -1) sfx('whoosh');
+    shown = i; now.textContent = String(i + 1).padStart(2, '0');
+  };
+
+  function layout(){
+    const next = wide.matches ? (reduceMotion ? 'grid' : 'h') : 'swipe';
+    if (next !== mode){
+      wrap.classList.remove('is-h', 'is-swipe', 'is-grid');
+      wrap.classList.add('is-' + next);
+      mode = next;
+      track.style.transform = '';
+      cards.forEach(c => { c.style.transform = ''; c.style.opacity = ''; });
+      if (mode === 'h') cards.forEach(c => c.classList.add('in'));
+    }
+    if (mode === 'h'){
+      dist = Math.max(0, track.scrollWidth - innerWidth);
+      wrap.style.height = `${innerHeight + dist}px`;
+    } else wrap.style.height = '';
+    update();
+  }
+
+  function update(){
+    if (mode !== 'h') return;
+    const top = wrap.getBoundingClientRect().top;
+    const p = dist ? clamp(-top / dist) : 0;
+    const x = p * dist;
+    track.style.transform = `translate3d(${-x}px,0,0)`;
+    fill.style.transform = `scaleX(${p})`;
+    const mid = innerWidth / 2;
+    let best = 0, bestD = Infinity;
+    cards.forEach((c, i) => {
+      const off = (c.offsetLeft + c.offsetWidth / 2 - x - mid) / innerWidth;
+      const a = clamp(off * 1.7, -1, 1);
+      c.style.transform = `translate3d(0,${Math.abs(a)*30}px,${-Math.abs(a)*220}px) rotateY(${-a*32}deg)`;
+      c.style.opacity = 1 - Math.abs(a) * .45;
+      if (Math.abs(off) < bestD){ bestD = Math.abs(off); best = i; }
+    });
+    setCount(best);
+  }
+
+  track.addEventListener('scroll', () => {
+    if (mode !== 'swipe') return;
+    const max = Math.max(1, track.scrollWidth - track.clientWidth);
+    fill.style.transform = `scaleX(${track.scrollLeft / max})`;
+    setCount(Math.round(track.scrollLeft / max * (cards.length - 1)));
+  }, { passive:true });
+
+  scrollHooks.push(update);
+  addEventListener('resize', layout);
+  wide.addEventListener('change', layout);
+  addEventListener('load', layout);
+  layout();
+})();
+
+// Parallax photos — drift against the scroll inside their frames
+if (!reduceMotion) (() => {
+  const imgs = [...document.querySelectorAll('.portrait img, .life-card .ph img')];
+  scrollHooks.push(() => imgs.forEach(img => {
+    const r = img.parentElement.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const off = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
+    img.style.translate = `0 ${(off * -9).toFixed(2)}%`;
+  }));
+})();
+
+// 3D tilt — cards lean toward the pointer (spotlight glare comes from .glass)
+if (!reduceMotion && finePointer) (() => {
+  const sel = '.work-card, .method-card, .life-card, .now-card, .about-grid .card, .honor, .spotify, .gh-card, .race';
+  let cur = null;
+  const reset = el => { el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); };
+  document.addEventListener('pointermove', e => {
+    const el = e.target.closest?.(sel);
+    if (cur && cur !== el) reset(cur);
+    cur = el;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const k = Math.min(1, 520 / r.width);           // big panels lean less
+    const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    el.classList.add('tilt');
+    el.style.setProperty('--rx', `${(-y * 8 * k).toFixed(2)}deg`);
+    el.style.setProperty('--ry', `${(x * 10 * k).toFixed(2)}deg`);
+  }, { passive:true });
+  document.addEventListener('pointerleave', () => cur && reset(cur));
+
+  // Eigi screenshots float on separate depth layers
+  const shots = $('.honor-shots'), honor = $('.honor');
+  honor?.addEventListener('pointermove', e => {
+    const r = honor.getBoundingClientRect();
+    shots.style.setProperty('--px', ((e.clientX - r.left) / r.width - .5).toFixed(3));
+    shots.style.setProperty('--py', ((e.clientY - r.top) / r.height - .5).toFixed(3));
+  }, { passive:true });
+  honor?.addEventListener('pointerleave', () => { shots.style.setProperty('--px', 0); shots.style.setProperty('--py', 0); });
+
+  // Magnetic buttons
+  document.querySelectorAll('.hero-cta .btn, .footer .btn, .nav-cta, .work-links .btn').forEach(b => {
+    b.addEventListener('pointermove', e => {
+      const r = b.getBoundingClientRect();
+      b.style.translate = `${((e.clientX - r.left) / r.width - .5) * 10}px ${((e.clientY - r.top) / r.height - .5) * 8}px`;
+    });
+    b.addEventListener('pointerleave', () => { b.style.translate = ''; });
+  });
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Glass spotlight + cursor dot
 // ─────────────────────────────────────────────────────────────────────────────
 document.addEventListener('pointermove', e => {
@@ -609,6 +930,7 @@ function startSite(){
   document.body.classList.add('ready');
   document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('in'));
   observeReveals();
+  requestScrollTick();
 }
 const minIntro = reduceMotion ? 0 : 1400, t0 = performance.now();
 let started = false;

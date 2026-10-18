@@ -60,7 +60,7 @@ const globalLimiter = rateLimit({
   legacyHeaders: false,
   message: { success: false, message: 'Too many requests, slow down.' },
 });
-app.use(globalLimiter);
+app.use('/api', globalLimiter); // static assets are not rate limited — a single page load is ~30 requests
 
 // ── API route ─────────────────────────────────────────────────────────────────
 app.post('/api/contact', async (req, res) => {

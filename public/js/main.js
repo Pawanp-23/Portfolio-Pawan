@@ -35,7 +35,7 @@ const projects = [
     headline:'Warehouse software that won’t let two orders grab the same last box.',
     desc:'Multi-tenant 3PL platform: receiving, atomic inventory reservations, shipments and tracking, invoicing, realtime WebSocket updates and grounded RAG chat.',
     tags:['Next.js','FastAPI','MongoDB','WebSocket','Stripe'] },
-  { name:'SAHARA', cat:'Smart India Hackathon · Team Lead', year:'2026',
+  { name:'SAHARA', cat:'Smart India Hackathon · Team lead', year:'2026',
     repo:'SIH',
     headline:'Spotting burnout before it happens — and explaining why.',
     desc:'SIH26186: privacy-preserving welfare intelligence that flags occupational stress and fatigue risk, explains causes with SHAP and simulates interventions.',
@@ -74,10 +74,10 @@ const stack = {
 };
 
 const method = [
-  ['01 · Mindset','Problems before models','I start with the workflow that hurts, then choose the model — never the other way round.'],
-  ['02 · Lens','Hardware-aware software','An ENTC background means I think about sensors, latency and power — not just APIs.'],
-  ['03 · Process','Prototype, then polish','A working demo in days beats a perfect deck in weeks. Iterate from something real.'],
-  ['04 · Scope','Systems, end to end','Voice in, data through, action out — I like owning the whole pipeline.'],
+  ['Mindset','Problems before models','I start with the workflow that hurts, then choose the model — never the other way round.'],
+  ['Lens','Hardware-aware software','An ENTC background means I think about sensors, latency and power — not just APIs.'],
+  ['Process','Prototype, then polish','A working demo in days beats a perfect deck in weeks. Iterate from something real.'],
+  ['Scope','Systems, end to end','Voice in, data through, action out — I like owning the whole pipeline.'],
 ];
 
 // "When the laptop's closed" — order fills a 3×2 grid; the feature card spans two rows in the middle.
@@ -137,9 +137,8 @@ $('#workGrid').innerHTML = projects.map((p,i) => `
   <li class="reveal" style="--d:${(i%2)*.1}s">
     <article class="glass work-card">
       ${face(p)}
-      <div class="work-meta mono"><span>0${i+1} · ${esc(p.cat)}</span><span>${esc(p.year)}</span></div>
       <div class="work-text">
-        <h3 class="work-name">${esc(p.name)}</h3>
+        <div class="work-title"><h3 class="work-name">${esc(p.name)}</h3><span class="work-context">${esc(p.cat)}</span></div>
         <p class="work-headline">${esc(p.headline)}</p>
         <p class="work-desc">${esc(p.desc)}</p>
       </div>
@@ -157,7 +156,6 @@ $('#workGrid').innerHTML = projects.map((p,i) => `
 $('#workGrid').insertAdjacentHTML('beforeend', `
   <li class="reveal">
     <article class="glass work-card more-card">
-      <div class="work-meta mono"><span>+${moreProjects.length} · More projects</span><span>→</span></div>
       <h3 class="more-title">And a few <em>more</em>.</h3>
       <ul class="more-list">${moreProjects.map(p => `
         <li class="more-item">
@@ -210,7 +208,7 @@ $('#lifeGrid').innerHTML = life.map((c,i) => {
     </article>`;
   if (c.type === 'now') return `
     <article class="glass now-card reveal" ${d}>
-      <span class="mono">◦ Right now ◦</span>
+      <span class="mono">Right now</span>
       <ul class="now-list">
         <li><span>Building</span><span>JARVIS X</span></li>
         <li><span>Exploring</span><span>Voice AI &amp; agents</span></li>

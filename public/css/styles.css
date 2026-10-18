@@ -257,14 +257,17 @@ body.ready .avatar{opacity:1;transform:none}
 .honor-site{font-weight:500;font-size:1.05rem}
 .honor-chip{margin-left:auto;padding:.25rem .6rem;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-size:.58rem}
 .honor-chip.is-private{border-style:dashed}
+.honor-chip.is-main{border-color:rgba(229,25,44,.5);background:rgba(229,25,44,.12);color:#ff8a95}
 .honor .work-links{padding-top:0}
 
-.honor-shots{position:relative;aspect-ratio:16/12.5}
-.honor-shots .face{position:absolute;width:86%;box-shadow:0 30px 60px -20px rgba(0,0,0,.9);transition:transform .9s var(--ease)}
-.honor-back{top:0;right:0;transform:rotate(3deg);opacity:.85}
-.honor-front{bottom:0;left:0;transform:rotate(-2deg);z-index:1}
-.honor:hover .honor-back{transform:rotate(5deg) translate(3%,-3%)}
-.honor:hover .honor-front{transform:rotate(-3deg) translate(-2%,2%)}
+.honor-shots{position:relative;aspect-ratio:16/13.5}
+.honor-shots .face{position:absolute;width:80%;box-shadow:0 30px 60px -20px rgba(0,0,0,.9);transition:transform .9s var(--ease)}
+.honor-back{top:0;right:0;transform:rotate(4deg);opacity:.7}
+.honor-mid{top:50%;right:6%;transform:translateY(-55%) rotate(-1deg);opacity:.9}
+.honor-front{bottom:0;left:0;transform:rotate(-3deg);z-index:1}
+.honor:hover .honor-back{transform:rotate(6deg) translate(3%,-4%)}
+.honor:hover .honor-mid{transform:translateY(-55%) rotate(1deg) translate(4%,0)}
+.honor:hover .honor-front{transform:rotate(-4deg) translate(-2%,3%)}
 
 @media (max-width:900px){
   .honor{grid-template-columns:1fr}
@@ -614,6 +617,7 @@ html.crt::before{content:"";position:fixed;left:0;right:0;top:50%;height:2px;mar
 [data-theme=light] .face-title{background:radial-gradient(70% 90% at 50% 120%,rgba(229,25,44,.35),transparent 70%),repeating-linear-gradient(90deg,transparent 0 calc(12.5% - 1px),rgba(0,0,0,.05) calc(12.5% - 1px) 12.5%),#ebe6df}
 [data-theme=light] .work-card:hover .face-name{color:var(--ink)}
 [data-theme=light] .honor-list li,[data-theme=light] .shelf{background:rgba(255,255,255,.5)}
+[data-theme=light] .honor-badge,[data-theme=light] .honor-chip.is-main{color:#b3121f}
 [data-theme=light] .ribbon-b{background:rgba(255,255,255,.6)}
 [data-theme=light] .gh-cell.l0,[data-theme=light] .gh-legend .l0{background:rgba(0,0,0,.07)}
 [data-theme=light] .modal-panel{background:rgba(250,248,245,.95)}

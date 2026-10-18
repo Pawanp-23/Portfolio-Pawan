@@ -10,7 +10,7 @@
 The personal portfolio of **Pawan Patil** — AI Product Engineer & Forward Deployed Engineer from Nagpur, India. A dark, pixel-serif, glass-card site that tells a story instead of listing a CV, with a few things you can actually play with.
 
 ## Highlights
-- **Shipped for eigi.ai** — production work on fde.eigi.ai and the internal admin console
+- **Forward Deployed Engineer intern at eigi.ai** — shipped the official eigi.ai website, plus fde.eigi.ai and the internal admin console
 - **Projects** with live demos, GitHub and API links, and screenshot face cards
 - **Break my warehouse** — an interactive race showing why atomic inventory reservations prevent overselling
 - **Live data** — GitHub contribution calendar, Spotify “on repeat” card with a scratchable vinyl, live Nagpur clock

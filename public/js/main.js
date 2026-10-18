@@ -40,8 +40,8 @@ const education = [
 ];
 
 const experience = [
-  { when:'2026 — Now', what:'AI Product / Frontend Contributor', where:'EIGI AI · fde.eigi.ai', now:true,
-    detail:'Turn ambiguous product requirements into structured UI flows and API-integrated React interfaces; ship iterative FDE releases with backend and leadership.' },
+  { when:'2026 — Now', what:'Forward Deployed Engineer Intern', where:'EIGI AI · eigi.ai', now:true,
+    detail:'Shipped the official eigi.ai website, plus fde.eigi.ai and the admin.eigi.ai console — turning ambiguous product requirements into structured UI flows and API-integrated React interfaces with backend and leadership.' },
   { when:'Jun — Jul 2026', what:'Project Lead / App Lead', where:'MRSAC — Maharashtra Remote Sensing Application Centre, Nagpur',
     detail:'Led React architecture for a GIS-based EV Smart Platform; integrated field-verified data for 8 charging stations, 34 charging points and 5 battery service centres.' },
   { when:'May — Jun 2025', what:'Industrial Intern', where:'BSNL — Bharat Sanchar Nigam Limited',

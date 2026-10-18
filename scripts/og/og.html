@@ -1,0 +1,43 @@
+<!doctype html>
+<!-- Source for public/og.jpg (1200×630 link-preview card, also the GitHub profile banner).
+     Render: msedge --headless=new --hide-scrollbars --window-size=1200,630 --virtual-time-budget=5000 --screenshot=og.png scripts/og/og.html
+     then convert to public/og.jpg -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Onest:wght@300;400&family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#000}
+  body{position:relative;font-family:'Onest',sans-serif;color:#f4f1ec}
+  .glow{position:absolute;inset:-30% -10% auto 35%;height:90%;background:radial-gradient(50% 50% at 60% 30%,rgba(229,25,44,.45),transparent 70%);filter:blur(18px)}
+  .lines{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(12.5% - 1px),rgba(255,255,255,.03) calc(12.5% - 1px) 12.5%)}
+  .copy{position:absolute;left:80px;top:72px;right:420px}
+  .kicker{font-family:'Fragment Mono',monospace;font-size:17px;letter-spacing:.22em;color:#b9b4ae;display:flex;align-items:center;gap:14px}
+  .kicker i{width:11px;height:11px;border-radius:50%;background:#e5192c;box-shadow:0 0 14px #e5192c}
+  .kicker b{color:#e5192c;font-weight:400}
+  h1{font-family:'Pixelify Sans',sans-serif;font-weight:500;font-size:112px;line-height:.98;margin:34px 0 0;letter-spacing:-.01em}
+  h1 em{font-style:normal;color:#e5192c}
+  .role{margin-top:42px;font-size:30px;font-weight:300;color:#e9e4de;white-space:nowrap}
+  .role span{color:#6e6a66;margin:0 .35em}
+  .chips{position:absolute;left:80px;bottom:70px;display:flex;gap:12px}
+  .chips span{font-family:'Fragment Mono',monospace;font-size:16px;letter-spacing:.06em;padding:9px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#dcd7d1}
+  .chips span.hot{border-color:rgba(229,25,44,.6);color:#fff}
+  .avatar{position:absolute;right:92px;top:80px;width:250px;height:250px;border-radius:50%;overflow:hidden;background:#e5192c;box-shadow:0 0 90px -10px rgba(229,25,44,.75)}
+  .avatar img{width:100%;height:100%;object-fit:cover}
+  .url{position:absolute;right:64px;top:352px;width:306px;text-align:center;font-family:'Fragment Mono',monospace;font-size:15px;color:#9d9892;letter-spacing:.02em}
+</style>
+</head>
+<body>
+  <div class="glow"></div><div class="lines"></div>
+  <div class="copy">
+    <div class="kicker"><i></i>PORTFOLIO · <b>NAGPUR, IN</b></div>
+    <h1>Pawan<br>Patil<em>.</em></h1>
+    <div class="role">Forward Deployed Engineer<span>·</span>AI Developer<span>·</span>Frontend Developer</div>
+  </div>
+  <div class="avatar"><img src="../../public/img/avatar.jpg" alt=""></div>
+  <div class="url">portfolio-pawanpatil.vercel.app</div>
+  <div class="chips"><span>Voice AI</span><span>RAG</span><span>React</span><span>TypeScript</span><span class="hot">Shipped @ eigi.ai</span></div>
+</body>
+</html>

@@ -22,7 +22,7 @@ const projects = [
   { name:'BlindSpot', cat:'PromptWars · Google × Hack2Skill', year:'2026',
     live:'https://blindspot-s5sh.onrender.com', repo:'Pawan_patil_PROMPTWARS', shot:'/img/project-blindspot.webp', sleeps:true,
     headline:'A thinking companion that finds the blind spots in your reasoning — and never decides for you.',
-    desc:'Talk a decision through with a voice agent; Gemini maps what your reasoning covers, flags assumptions, conflicts and thinking traps, and asks one better question per gap.',
+    desc:'Talk a decision through with a voice agent in English, Hindi or Marathi; Gemini maps what your reasoning covers, flags assumptions, conflicts and thinking traps, and asks one better question per gap.',
     tags:['React','TypeScript','Express','Gemini','Firestore'] },
   { name:'CityCare Clinic', cat:'Healthcare · AI', year:'2026',
     live:'https://citycare-frontend-wlw8.onrender.com', repo:'City_Care', shot:'/img/project-citycare.webp', sleeps:true,

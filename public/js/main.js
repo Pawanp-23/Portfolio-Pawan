@@ -766,7 +766,7 @@ if (!reduceMotion) document.querySelectorAll('.display, .footer-title').forEach(
 
 // Hero drifts back as you scroll away from it
 if (!reduceMotion) (() => {
-  const title = $('.hero-title'), avatar = $('#avatar'), glow = $('.hero .hero-glow'), status = $('.hero-status');
+  const title = $('.hero-title'), avatar = $('.avatar-wrap'), glow = $('.hero .hero-glow'), status = $('.hero-status');
   scrollHooks.push(() => {
     const p = clamp(scrollY / innerHeight);
     if (p >= 1 && title.dataset.gone) return;
@@ -778,6 +778,58 @@ if (!reduceMotion) (() => {
     if (glow) glow.style.transform = `scale(${1 + p*.6})`;
     if (status) status.style.opacity = 1 - p*2;
   });
+})();
+
+// Hero mystery — the name decrypts into place, a cursor spotlight lights the grid,
+// and the redacted line opens on hover / tap
+(() => {
+  const hero = $('.hero'), el = $('.hero .decrypt');
+  if (el && !reduceMotion){
+    const final = el.dataset.text, glyphs = '█▓▒░<>/\\|#%&*+=?01';
+    const sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = final;
+    el.after(sr); el.setAttribute('aria-hidden', 'true');
+    el.textContent = final.replace(/[^ ·]/g, '░');
+    const total = 48;
+    const run = (frame = 0) => {
+      const done = Math.floor(final.length * frame / total);
+      el.innerHTML = [...final].map((c, i) => i < done || c === ' ' || c === '·' ? esc(c) : `<i>${glyphs[Math.random() * glyphs.length | 0]}</i>`).join('');
+      if (frame < total) setTimeout(() => run(frame + 1), 34); else el.textContent = final;
+    };
+    document.addEventListener('site:ready', () => setTimeout(run, 250), { once:true });
+  }
+  if (finePointer && !reduceMotion){
+    document.documentElement.classList.add('spot');
+    let raf = 0, x = 0, y = 0;
+    hero.addEventListener('pointermove', e => {
+      const r = hero.getBoundingClientRect(); x = e.clientX - r.left; y = e.clientY - r.top;
+      if (!raf) raf = requestAnimationFrame(() => { raf = 0; hero.style.setProperty('--hx', `${x}px`); hero.style.setProperty('--hy', `${y}px`); });
+    }, { passive:true });
+  }
+  // "I make AI talk. / listen. / ship. / behave. / useful." — one word swaps every few seconds
+  const rot = $('.rotator');
+  if (rot && !reduceMotion){
+    const words = rot.dataset.words.split('|');
+    let i = words.length - 1, cur = $('.rot-word', rot), paused = false;
+    const measure = w => { const m = cur.cloneNode(); m.textContent = w; m.className = 'rot-word'; m.style.cssText = 'position:absolute;visibility:hidden'; rot.append(m); const x = m.getBoundingClientRect().width; m.remove(); return x; };
+    rot.style.width = `${measure(cur.textContent)}px`;
+    const swap = () => {
+      if (paused || document.hidden) return;
+      i = (i + 1) % words.length;
+      const next = document.createElement('em');
+      next.className = 'rot-word in'; next.setAttribute('aria-hidden', 'true'); next.textContent = words[i];
+      rot.append(next);
+      rot.style.width = `${measure(words[i])}px`;
+      const old = cur; cur = next;
+      requestAnimationFrame(() => requestAnimationFrame(() => { old.classList.add('out'); next.classList.remove('in'); }));
+      setTimeout(() => old.remove(), 650);
+    };
+    rot.addEventListener('pointerenter', () => { paused = true; });
+    rot.addEventListener('pointerleave', () => { paused = false; });
+    const refit = () => { rot.style.width = `${measure(cur.textContent)}px`; };
+    addEventListener('resize', refit);
+    document.fonts?.ready.then(refit);
+    document.addEventListener('site:ready', () => setTimeout(() => { swap(); setInterval(swap, 2300); }, 1600), { once:true });
+  }
 })();
 
 // Work gallery — desktop: vertical scroll drives a pinned, curved 3D track
@@ -931,6 +983,7 @@ function startSite(){
   document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('in'));
   observeReveals();
   requestScrollTick();
+  document.dispatchEvent(new Event('site:ready'));
 }
 const minIntro = reduceMotion ? 0 : 1400, t0 = performance.now();
 let started = false;

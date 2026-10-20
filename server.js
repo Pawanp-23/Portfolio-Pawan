@@ -28,7 +28,7 @@ app.use(
         defaultSrc: ["'self'"],
         styleSrc:   ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
         fontSrc:    ["'self'", 'https://fonts.gstatic.com'],
-        scriptSrc:  ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://open.spotify.com'],
+        scriptSrc:  ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://cdn.jsdelivr.net', 'https://open.spotify.com'],
         frameSrc:   ['https://open.spotify.com'],
         imgSrc:     ["'self'", 'data:', 'blob:', 'https://i.scdn.co'],
         connectSrc: ["'self'", 'https://github-contributions-api.jogruber.de'],

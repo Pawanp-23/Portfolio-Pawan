@@ -1,4 +1,9 @@
 import Lenis from 'lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
+
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -134,7 +139,7 @@ const face = p => p.shot ? `
   </a>`;
 
 $('#workGrid').innerHTML = projects.map((p,i) => `
-  <li class="reveal" style="--d:${(i%2)*.1}s">
+  <li>
     <article class="glass work-card">
       ${face(p)}
       <div class="work-text">
@@ -154,7 +159,7 @@ $('#workGrid').innerHTML = projects.map((p,i) => `
 
 // Last stop in the gallery: the smaller builds, as one closing card on the right
 $('#workGrid').insertAdjacentHTML('beforeend', `
-  <li class="reveal">
+  <li>
     <article class="glass work-card more-card">
       <h3 class="more-title">And a few <em>more</em>.</h3>
       <ul class="more-list">${moreProjects.map(p => `
@@ -193,21 +198,20 @@ $('#eduTimeline').innerHTML = timeline(education);
 $('#expTimeline').innerHTML = timeline(experience);
 
 $('#methodGrid').innerHTML = method.map((m,i) => `
-  <li class="reveal" style="--d:${i*.08}s"><article class="glass method-card">
+  <li class="reveal"><article class="glass method-card">
     <span class="mono">${esc(m[0])}</span><h3>${esc(m[1])}</h3><p>${esc(m[2])}</p>
   </article></li>`).join('');
 
 const statHtml = s => s ? `<div class="stat"><span class="mono">${esc(s.label)}</span><span class="stat-val">${esc(s.val)}<em>${esc(s.em)}</em></span></div>` : '';
 $('#lifeGrid').innerHTML = life.map((c,i) => {
-  const d = `style="--d:${(i%3)*.08}s"`;
   if (c.type === 'feature') return `
-    <article class="glass life-card feature reveal" ${d}>
+    <article class="glass life-card feature reveal">
       <div class="ph">${c.imgs.map((im,j)=>`<img src="${im.src}" alt="${esc(im.alt)}" loading="lazy" style="object-position:${im.pos};${j?'opacity:0':''}" />`).join('')}</div>
       <dl class="overlay-stats">${c.overlay.map(o=>`<div><dt class="mono">${esc(o[0])}</dt><dd style="margin:0"><b>${esc(o[1])}</b></dd></div>`).join('')}</dl>
       <div class="life-body"><span class="mono">${esc(c.kicker)}</span><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p></div>
     </article>`;
   if (c.type === 'now') return `
-    <article class="glass now-card reveal" ${d}>
+    <article class="glass now-card reveal">
       <span class="mono">Right now</span>
       <ul class="now-list">
         <li><span>Building</span><span>JARVIS X</span></li>
@@ -217,7 +221,7 @@ $('#lifeGrid').innerHTML = life.map((c,i) => {
       </ul>
     </article>`;
   return `
-    <article class="glass life-card reveal" ${d}>
+    <article class="glass life-card reveal">
       <div class="ph"><img src="${c.img}" alt="${esc(c.alt)}" loading="lazy" ${c.pos?`style="object-position:${c.pos}"`:''} /></div>
       <div class="life-body"><span class="mono">${esc(c.kicker)}</span><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p>${statHtml(c.stat)}</div>
     </article>`;
@@ -593,8 +597,15 @@ initHalftone();
 // ─────────────────────────────────────────────────────────────────────────────
 // Smooth scroll + anchor links
 // ─────────────────────────────────────────────────────────────────────────────
+// Lenis runs on GSAP's ticker so ScrollTrigger scrubs and pins stay in sync with the smoothed scroll
 const lenis = reduceMotion ? null : new Lenis({ smoothWheel:true, lerp:.09 });
-if (lenis) { const raf = t => { lenis.raf(t); requestAnimationFrame(raf); }; requestAnimationFrame(raf); }
+if (lenis){
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add(t => lenis.raf(t * 1000));
+  gsap.ticker.lagSmoothing(0);
+}
+const mm = gsap.matchMedia();
+const MOTION = '(prefers-reduced-motion: no-preference)';
 document.addEventListener('click', e => {
   const a = e.target.closest('a[href^="#"]');
   if (!a || a.hasAttribute('data-contact')) return;
@@ -606,17 +617,7 @@ document.addEventListener('click', e => {
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Reveal on scroll
-// ─────────────────────────────────────────────────────────────────────────────
-const io = new IntersectionObserver(entries => entries.forEach(en => {
-  if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
-}), { threshold:.12, rootMargin:'0px 0px -5% 0px' });
-const observeReveals = () => document.querySelectorAll('.reveal:not(.in)').forEach(el => {
-  if (!el.closest('.hero')) io.observe(el);
-});
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Motion — one rAF-throttled scroll loop drives every scroll-linked effect
+// Motion — scroll-linked effects run on GSAP ScrollTrigger (see below)
 // ─────────────────────────────────────────────────────────────────────────────
 const finePointer = matchMedia('(hover:hover) and (pointer:fine)').matches;
 
@@ -724,76 +725,41 @@ const sfx = (() => {
   render();
   return play;
 })();
-const scrollHooks = [];
-let ticking = false;
-const runScrollHooks = () => { ticking = false; scrollHooks.forEach(f => f()); };
-const requestScrollTick = () => { if (!ticking){ ticking = true; requestAnimationFrame(runScrollHooks); } };
-addEventListener('scroll', requestScrollTick, { passive:true });
-addEventListener('resize', requestScrollTick);
-const clamp = (v, a=0, b=1) => Math.min(b, Math.max(a, v));
 if (!reduceMotion) document.documentElement.classList.add('motion');
-
-// Section headings rise in word by word (an <em> stays one unit)
-if (!reduceMotion) document.querySelectorAll('.display, .footer-title').forEach(h => {
-  let i = 0;
-  const wrap = node => { const w = document.createElement('span'); w.className = 'w'; const s = document.createElement('span'); s.style.setProperty('--i', i++); s.append(node); w.append(s); return w; };
-  [...h.childNodes].forEach(n => {
-    if (n.nodeType === 3){
-      const frag = document.createDocumentFragment();
-      n.textContent.split(/(\s+)/).forEach(part => {
-        if (!part) return;
-        frag.append(/^\s+$/.test(part) ? document.createTextNode(part) : wrap(document.createTextNode(part)));
-      });
-      n.replaceWith(frag);
-    } else if (n.nodeName !== 'BR') n.replaceWith(wrap(n.cloneNode(true)));
-  });
-  h.classList.add('split');
-});
 
 // Reading progress bar
 (() => {
   const bar = document.createElement('div');
   bar.className = 'scroll-progress'; bar.setAttribute('aria-hidden', 'true'); bar.innerHTML = '<i></i>';
   document.body.append(bar);
-  const fill = bar.firstChild;
-  scrollHooks.push(() => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    fill.style.transform = `scaleX(${max > 0 ? clamp(scrollY / max) : 0})`;
-  });
+  gsap.to(bar.firstChild, { scaleX:1, ease:'none', scrollTrigger:{ start:0, end:'max', scrub:true } });
 })();
 
 // Hero drifts back as you scroll away from it
-if (!reduceMotion) (() => {
-  const title = $('.hero-title'), avatar = $('.avatar-wrap'), glow = $('.hero .hero-glow'), status = $('.hero-status');
-  scrollHooks.push(() => {
-    const p = clamp(scrollY / innerHeight);
-    if (p >= 1 && title.dataset.gone) return;
-    title.dataset.gone = p >= 1 ? '1' : '';
-    title.style.transform = `translate3d(0,${-p*90}px,0) scale(${1 - p*.12})`;
-    title.style.opacity = 1 - p*1.1;
-    avatar.style.translate = `0 ${-p*140}px`;
-    avatar.style.rotate = `${p*-8}deg`;
-    if (glow) glow.style.transform = `scale(${1 + p*.6})`;
-    if (status) status.style.opacity = 1 - p*2;
-  });
-})();
+mm.add(MOTION, () => {
+  gsap.timeline({ defaults:{ ease:'none', duration:1 }, scrollTrigger:{ start:0, end:() => innerHeight, scrub:true } })
+    .to('.hero-title', { y:-90, scale:.88, opacity:-.1 }, 0)
+    .to('.avatar-wrap', { y:-140, rotation:-8 }, 0)
+    .to('.hero .hero-glow', { scale:1.6 }, 0)
+    .to('.hero-status', { opacity:0, duration:.5 }, 0);
+});
 
 // Hero mystery — the name decrypts into place, a cursor spotlight lights the grid,
-// and the redacted line opens on hover / tap
+// and the rotating word keeps swapping
 (() => {
   const hero = $('.hero'), el = $('.hero .decrypt');
+  let decrypt = () => {};
   if (el && !reduceMotion){
     const final = el.dataset.text, glyphs = '█▓▒░<>/\\|#%&*+=?01';
     const sr = document.createElement('span'); sr.className = 'sr-only'; sr.textContent = final;
     el.after(sr); el.setAttribute('aria-hidden', 'true');
     el.textContent = final.replace(/[^ ·]/g, '░');
     const total = 48;
-    const run = (frame = 0) => {
+    decrypt = (frame = 0) => {
       const done = Math.floor(final.length * frame / total);
       el.innerHTML = [...final].map((c, i) => i < done || c === ' ' || c === '·' ? esc(c) : `<i>${glyphs[Math.random() * glyphs.length | 0]}</i>`).join('');
-      if (frame < total) setTimeout(() => run(frame + 1), 34); else el.textContent = final;
+      if (frame < total) setTimeout(() => decrypt(frame + 1), 34); else el.textContent = final;
     };
-    document.addEventListener('site:ready', () => setTimeout(run, 250), { once:true });
   }
   if (finePointer && !reduceMotion){
     document.documentElement.classList.add('spot');
@@ -805,6 +771,7 @@ if (!reduceMotion) (() => {
   }
   // "I make AI talk. / listen. / ship. / behave. / useful." — one word swaps every few seconds
   const rot = $('.rotator');
+  let rotate = () => {};
   if (rot && !reduceMotion){
     const words = rot.dataset.words.split('|');
     let i = words.length - 1, cur = $('.rot-word', rot), paused = false;
@@ -826,87 +793,190 @@ if (!reduceMotion) (() => {
     const refit = () => { rot.style.width = `${measure(cur.textContent)}px`; };
     addEventListener('resize', refit);
     document.fonts?.ready.then(refit);
-    document.addEventListener('site:ready', () => setTimeout(() => { swap(); setInterval(swap, 2300); }, 1600), { once:true });
+    rotate = () => { swap(); setInterval(swap, 2300); };
   }
+
+  // Entrance — one timeline, played when the intro curtain lifts (site:ready).
+  // Line 1 glides in from the left, line 2 from the right; their letters start spread
+  // apart and tighten as they land (per-character x, so only transforms move).
+  let ready = false;
+  document.addEventListener('site:ready', () => { ready = true; }, { once:true });
+  mm.add(MOTION, () => {
+    if (ready) return;                                            // already on screen — don't hide it again
+    const kicker = $('.hero-kicker'), lines = [...document.querySelectorAll('.hero-line')];
+    const sub = $('.hero-sub'), cta = $('.hero-cta'), title = $('.hero-title');
+    const splits = [lines[0], $('.hero-lead')].map(t => SplitText.create(t, { type:'chars', tag:'span', charsClass:'hc' }));
+    const em = () => parseFloat(getComputedStyle(title).fontSize);
+    const spread = i => i * em() * .18;                             // ≈ the old letter-spacing .16em → -.02em
+    const fade = { autoAlpha:0, y:24, filter:'blur(6px)' };
+    const shown = { autoAlpha:1, y:0, filter:'blur(0px)' };
+
+    const tl = gsap.timeline({ paused:true, defaults:{ ease:'expo.out' },
+      onComplete(){
+        splits.forEach(s => s.revert());
+        gsap.set([kicker, ...lines, sub, cta, rot], { clearProps:'transform,opacity,visibility,filter' });
+      } });
+    tl.fromTo(kicker, fade, { ...shown, duration:1 }, 0)
+      .call(decrypt, null, .25)
+      .fromTo(lines[0], { x:() => -innerWidth * .18, autoAlpha:0, filter:'blur(12px)' },
+                        { x:0, autoAlpha:1, filter:'blur(0px)', duration:1.6 }, .35)
+      .fromTo(splits[0].chars, { x:spread }, { x:0, duration:1.7 }, '<')
+      .fromTo(lines[1], { x:() => innerWidth * .18, autoAlpha:0, filter:'blur(12px)' },
+                        { x:0, autoAlpha:1, filter:'blur(0px)', duration:1.6 }, .6)
+      .fromTo(splits[1].chars, { x:spread }, { x:0, duration:1.7 }, '<')
+      .fromTo(rot, { x:() => spread(splits[1].chars.length + 1) }, { x:0, duration:1.7 }, '<')
+      .fromTo(sub, fade, { ...shown, duration:1.1 }, 1.05)
+      .fromTo(cta, fade, { ...shown, duration:1.1 }, 1.2)
+      .call(rotate, null, 2.2);
+
+    const play = () => tl.play();
+    document.addEventListener('site:ready', play, { once:true });
+    return () => { document.removeEventListener('site:ready', play); splits.forEach(s => s.revert()); };
+  });
 })();
 
-// Work gallery — desktop: vertical scroll drives a pinned, curved 3D track
-// small screens: native horizontal swipe carousel · reduced motion on desktop: plain grid
+// Work gallery — desktop: ScrollTrigger pins the section and vertical scroll scrubs a
+// curved 3D track sideways · small/short screens: native swipe carousel · reduced motion: plain grid
 (() => {
   const wrap = $('#hscroll'), track = $('#workGrid');
   if (!wrap || !track) return;
-  const cards = [...track.children];
+  const pin = $('.hscroll-pin', wrap), cards = [...track.children];
   const fill = $('#hsFill'), now = $('#hsNow');
   $('#hsAll').textContent = String(cards.length).padStart(2, '0');
-  const wide = matchMedia('(min-width:900px) and (min-height:600px)');
-  let mode = '', dist = 0;
-  let shown = -1;
+  let shown = -1, swipe = false;
   const setCount = i => {
     if (i === shown) return;
     if (shown !== -1) sfx('whoosh');
     shown = i; now.textContent = String(i + 1).padStart(2, '0');
   };
 
-  function layout(){
-    const next = wide.matches ? (reduceMotion ? 'grid' : 'h') : 'swipe';
-    if (next !== mode){
-      wrap.classList.remove('is-h', 'is-swipe', 'is-grid');
-      wrap.classList.add('is-' + next);
-      mode = next;
-      track.style.transform = '';
-      cards.forEach(c => { c.style.transform = ''; c.style.opacity = ''; });
-      if (mode === 'h') cards.forEach(c => c.classList.add('in'));
-    }
-    if (mode === 'h'){
-      dist = Math.max(0, track.scrollWidth - innerWidth);
-      wrap.style.height = `${innerHeight + dist}px`;
-    } else wrap.style.height = '';
-    update();
-  }
-
-  function update(){
-    if (mode !== 'h') return;
-    const top = wrap.getBoundingClientRect().top;
-    const p = dist ? clamp(-top / dist) : 0;
-    const x = p * dist;
-    track.style.transform = `translate3d(${-x}px,0,0)`;
-    fill.style.transform = `scaleX(${p})`;
-    const mid = innerWidth / 2;
-    let best = 0, bestD = Infinity;
-    cards.forEach((c, i) => {
-      const off = (c.offsetLeft + c.offsetWidth / 2 - x - mid) / innerWidth;
-      const a = clamp(off * 1.7, -1, 1);
-      c.style.transform = `translate3d(0,${Math.abs(a)*30}px,${-Math.abs(a)*220}px) rotateY(${-a*32}deg)`;
-      c.style.opacity = 1 - Math.abs(a) * .45;
-      if (Math.abs(off) < bestD){ bestD = Math.abs(off); best = i; }
-    });
-    setCount(best);
-  }
-
   track.addEventListener('scroll', () => {
-    if (mode !== 'swipe') return;
+    if (!swipe) return;
     const max = Math.max(1, track.scrollWidth - track.clientWidth);
     fill.style.transform = `scaleX(${track.scrollLeft / max})`;
     setCount(Math.round(track.scrollLeft / max * (cards.length - 1)));
   }, { passive:true });
 
-  scrollHooks.push(update);
-  addEventListener('resize', layout);
-  wide.addEventListener('change', layout);
-  addEventListener('load', layout);
-  layout();
+  const WIDE = '(min-width:900px) and (min-height:600px)';
+  mm.add({
+    h:    `${WIDE} and ${MOTION}`,
+    grid: `${WIDE} and (prefers-reduced-motion: reduce)`,
+    swipe:'(max-width:899.98px), (max-height:599.98px)',
+  }, ({ conditions:c }) => {
+    const mode = c.h ? 'h' : c.grid ? 'grid' : 'swipe';
+    wrap.classList.add('is-' + mode);
+    swipe = mode === 'swipe';
+    const cleanup = () => { wrap.classList.remove('is-' + mode); fill.style.transform = ''; };
+    if (mode !== 'h') return cleanup;
+
+    const set = cards.map(c => ({
+      y: gsap.quickSetter(c, 'y', 'px'), z: gsap.quickSetter(c, 'z', 'px'),
+      ry: gsap.quickSetter(c, 'rotationY', 'deg'), o: gsap.quickSetter(c, 'opacity'),
+    }));
+    let dist = 0, centers = [];
+    const measure = () => {
+      dist = Math.max(0, track.scrollWidth - innerWidth);
+      centers = cards.map(c => c.offsetLeft + c.offsetWidth / 2);
+    };
+    // Cards bend away from the centre: further off-centre → rotated, pushed back and dimmed
+    const curve = p => {
+      const x = p * dist, mid = innerWidth / 2;
+      let best = 0, bestD = Infinity;
+      centers.forEach((cx, i) => {
+        const off = (cx - x - mid) / innerWidth, a = gsap.utils.clamp(-1, 1, off * 1.7);
+        set[i].y(Math.abs(a) * 30); set[i].z(-Math.abs(a) * 220); set[i].ry(-a * 32); set[i].o(1 - Math.abs(a) * .45);
+        if (Math.abs(off) < bestD){ bestD = Math.abs(off); best = i; }
+      });
+      fill.style.transform = `scaleX(${p})`;
+      setCount(best);
+    };
+    // Scroll progress at which each card sits dead centre — used for snapping and keyboard focus
+    const stops = () => centers.map(cx => dist ? gsap.utils.clamp(0, 1, (cx - innerWidth / 2) / dist) : 0);
+    measure();
+    const st = gsap.to(track, {
+      x:() => -dist, ease:'none',
+      scrollTrigger:{
+        trigger:pin, pin:true, start:'top top', end:() => `+=${dist}`, scrub:true,
+        invalidateOnRefresh:true,
+        snap:{ snapTo:p => gsap.utils.snap(stops(), p), duration:{ min:.25, max:.7 }, delay:.12, ease:'power2.inOut' },
+        onRefreshInit:measure,
+        onRefresh:self => curve(self.progress),
+        onUpdate:self => curve(self.progress),
+      },
+    }).scrollTrigger;
+    curve(0);
+
+    // Tabbing into a card that's off to the side scrolls the page to where that card is centred
+    const onFocus = e => {
+      const i = cards.findIndex(c => c.contains(e.target));
+      if (i < 0) return;
+      pin.scrollLeft = 0;
+      const y = st.start + stops()[i] * (st.end - st.start);
+      if (Math.abs(scrollY - y) < 2) return;
+      if (lenis) lenis.scrollTo(y, { duration:.8 }); else scrollTo(0, y);
+    };
+    track.addEventListener('focusin', onFocus);
+    return () => { cleanup(); track.removeEventListener('focusin', onFocus); gsap.set(cards, { clearProps:'transform,opacity' }); };
+  });
 })();
 
-// Parallax photos — drift against the scroll inside their frames
-if (!reduceMotion) (() => {
-  const imgs = [...document.querySelectorAll('.portrait img, .life-card .ph img')];
-  scrollHooks.push(() => imgs.forEach(img => {
-    const r = img.parentElement.getBoundingClientRect();
-    if (r.bottom < 0 || r.top > innerHeight) return;
-    const off = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
-    img.style.translate = `0 ${(off * -9).toFixed(2)}%`;
-  }));
+// Section headings rise in word by word out of a mask (SplitText, on scroll)
+mm.add(MOTION, () => {
+  document.querySelectorAll('.display, .footer-title').forEach(h => {
+    h.classList.remove('reveal');
+    SplitText.create(h, {
+      type:'words', mask:'words', wordsClass:'w', tag:'span',
+      onSplit:self => gsap.from(self.words, {
+        yPercent:110, rotation:5, transformOrigin:'0% 100%',
+        duration:1.1, ease:'expo.out', stagger:.07,
+        scrollTrigger:{ trigger:h, start:'top 88%', once:true },
+      }),
+    });
+  });
+});
+
+// Blocks and cards rise in as they enter (ScrollTrigger.batch staggers whatever arrives together)
+// and drop back out when you scroll up past them, so they play again on the way down
+mm.add(MOTION, () => {
+  const items = gsap.utils.toArray('.reveal');
+  const hidden = el =>
+    el.closest('.method-grid, .life-grid') ? { autoAlpha:0, y:60, z:-40, rotationX:28, transformPerspective:900, transformOrigin:'50% 100%' } :
+    el.closest('.about-grid')              ? { autoAlpha:0, y:30, rotationY:16, transformPerspective:900, transformOrigin:'0% 50%' } :
+                                             { autoAlpha:0, y:24, filter:'blur(6px)' };
+  const hide = els => els.forEach(el => { el.classList.remove('in'); gsap.set(el, hidden(el)); });
+  hide(items);
+  ScrollTrigger.batch(items, {
+    start:'top 92%',
+    onEnter:els => {
+      els.forEach(el => el.classList.add('in'));                   // .in also starts the GitHub graph cells
+      const clear = 'transform,filter,opacity,visibility';         // hand transform back to the CSS tilt
+      const passed = els.filter(el => el.getBoundingClientRect().bottom < 0);   // jumped past (anchor link, fast scroll)
+      gsap.set(passed, { clearProps:clear });
+      gsap.to(els.filter(el => !passed.includes(el)), { autoAlpha:1, x:0, y:0, z:0, rotationX:0, rotationY:0, filter:'blur(0px)',
+        duration:1, ease:'expo.out', stagger:.08, overwrite:true, clearProps:clear });
+    },
+    onLeaveBack:els => { gsap.killTweensOf(els); hide(els); },
+  });
+  return () => items.forEach(el => el.classList.add('in'));
+});
+
+// Late content (fonts, the GitHub graph, lazy images) shifts what's below it — re-measure triggers
+(() => {
+  let last = document.body.scrollHeight, t = 0;
+  new ResizeObserver(() => {
+    const h = document.body.scrollHeight;
+    if (Math.abs(h - last) < 2) return;
+    last = h; clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 200);
+  }).observe(document.body);
 })();
+
+// Parallax photos — drift against the scroll inside their frames (a CSS var, so hover zoom keeps working)
+mm.add(MOTION, () => {
+  document.querySelectorAll('.portrait img, .life-card .ph img').forEach(img => {
+    gsap.fromTo(img, { '--py':'-6%' }, { '--py':'6%', ease:'none',
+      scrollTrigger:{ trigger:img.parentElement, start:'top bottom', end:'bottom top', scrub:true } });
+  });
+});
 
 // 3D tilt — cards lean toward the pointer (spotlight glare comes from .glass)
 if (!reduceMotion && finePointer) (() => {
@@ -936,13 +1006,15 @@ if (!reduceMotion && finePointer) (() => {
   }, { passive:true });
   honor?.addEventListener('pointerleave', () => { shots.style.setProperty('--px', 0); shots.style.setProperty('--py', 0); });
 
-  // Magnetic buttons
+  // Magnetic buttons — lean toward the pointer (the -2px keeps the hover lift)
   document.querySelectorAll('.hero-cta .btn, .footer .btn, .nav-cta, .work-links .btn').forEach(b => {
+    b.classList.add('mag');
+    const xTo = gsap.quickTo(b, 'x', { duration:.5, ease:'power3' }), yTo = gsap.quickTo(b, 'y', { duration:.5, ease:'power3' });
     b.addEventListener('pointermove', e => {
       const r = b.getBoundingClientRect();
-      b.style.translate = `${((e.clientX - r.left) / r.width - .5) * 10}px ${((e.clientY - r.top) / r.height - .5) * 8}px`;
+      xTo(((e.clientX - r.left) / r.width - .5) * 10); yTo(((e.clientY - r.top) / r.height - .5) * 8 - 2);
     });
-    b.addEventListener('pointerleave', () => { b.style.translate = ''; });
+    b.addEventListener('pointerleave', () => { xTo(0); yTo(0); });
   });
 })();
 
@@ -960,14 +1032,13 @@ document.addEventListener('pointermove', e => {
 (() => {
   const dot = $('.cursor-dot');
   if (!matchMedia('(hover:hover) and (pointer:fine)').matches || reduceMotion) return;
-  let x = -100, y = -100, cx = x, cy = y;
+  gsap.set(dot, { x:-100, y:-100 });
+  const xTo = gsap.quickTo(dot, 'x', { duration:.35, ease:'power3' }), yTo = gsap.quickTo(dot, 'y', { duration:.35, ease:'power3' });
   addEventListener('pointermove', e => {
-    x = e.clientX; y = e.clientY; dot.classList.add('on');
+    xTo(e.clientX); yTo(e.clientY); dot.classList.add('on');
     dot.classList.toggle('big', !!e.target.closest?.('a,button,.avatar'));
   }, { passive:true });
   document.addEventListener('pointerleave', () => dot.classList.remove('on'));
-  const loop = () => { cx += (x-cx)*.22; cy += (y-cy)*.22; dot.style.transform = `translate3d(${cx}px,${cy}px,0)`; requestAnimationFrame(loop); };
-  loop();
 })();
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -978,9 +1049,7 @@ function startSite(){
   loader.classList.add('gone');
   setTimeout(() => loader.remove(), 1200);
   document.body.classList.add('ready');
-  document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('in'));
-  observeReveals();
-  requestScrollTick();
+  ScrollTrigger.refresh();
   document.dispatchEvent(new Event('site:ready'));
 }
 

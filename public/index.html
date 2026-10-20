@@ -124,18 +124,18 @@
       </button>
     </div>
 
-    <p class="hero-kicker mono reveal" style="--d:.02s"><span class="decrypt" data-text="Pawan Patil · Forward Deployed Engineer">Pawan Patil · Forward Deployed Engineer</span></p>
+    <p class="hero-kicker mono"><span class="decrypt" data-text="Pawan Patil · Forward Deployed Engineer">Pawan Patil · Forward Deployed Engineer</span></p>
 
     <h1 class="hero-title">
-      <span class="reveal" style="--d:.55s">Hi, I'm Pawan.</span>
-      <span class="reveal" style="--d:.8s">I make AI <span class="rotator" data-words="talk.|listen.|ship.|behave.|useful."><span class="sr-only">useful.</span><em class="rot-word" aria-hidden="true">useful.</em></span></span>
+      <span class="hero-line">Hi, I'm Pawan.</span>
+      <span class="hero-line"><span class="hero-lead">I make AI</span> <span class="rotator" data-words="talk.|listen.|ship.|behave.|useful."><span class="sr-only">useful.</span><em class="rot-word" aria-hidden="true">useful.</em></span></span>
     </h1>
 
-    <p class="hero-sub reveal" style="--d:.42s">
+    <p class="hero-sub">
       AI and frontend developer — currently interning at <a class="hero-link" href="https://eigi.ai" target="_blank" rel="noopener noreferrer">Eigi AI</a>, where I shipped the official eigi.ai.
     </p>
 
-    <div class="hero-cta reveal" style="--d:.6s">
+    <div class="hero-cta">
       <button class="btn btn-glass" data-contact>Get in touch</button>
       <a class="btn btn-accent" href="/Pawan_Patil_Resume.pdf" download="Pawan_Patil_Resume.pdf"><svg viewBox="0 0 24 24" aria-hidden="true" class="dl-ico"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg> Résumé</a>
       <a class="btn btn-ghost" href="#work">See my work ↓</a>
@@ -203,7 +203,7 @@
       </div>
       <p class="lede reveal">Problems first, models second. Each of these started as a “what if” and ended as something that actually runs.</p>
     </header>
-    <!-- Pinned horizontal gallery: vertical scroll drives a sideways 3D track (swipe carousel on touch) -->
+    <!-- Pinned horizontal gallery (GSAP ScrollTrigger): vertical scroll drives a sideways 3D track (swipe carousel on touch) -->
     <div class="hscroll" id="hscroll">
       <div class="hscroll-pin">
         <div class="hscroll-bar mono" aria-hidden="true">
@@ -437,7 +437,12 @@
 </div>
 
 <script type="importmap">
-{ "imports": { "lenis": "https://unpkg.com/lenis@1.3.23/dist/lenis.mjs" } }
+{ "imports": {
+  "lenis": "https://unpkg.com/lenis@1.3.23/dist/lenis.mjs",
+  "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/index.js",
+  "gsap/ScrollTrigger": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/ScrollTrigger.js",
+  "gsap/SplitText": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/SplitText.js"
+} }
 </script>
 <script type="module" src="/js/main.js"></script>
 </body>

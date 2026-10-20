@@ -25,3 +25,6 @@ index-8.html
 
 # Tailored résumés / cover notes for specific applications (kept local)
 applications/
+
+# Daily tech digests (scheduled task, kept local)
+tech-radar/

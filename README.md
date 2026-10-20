@@ -7,7 +7,7 @@
 
 ![Portfolio preview](public/og.jpg)
 
-The personal portfolio of **Pawan Patil** — AI Product Engineer & Forward Deployed Engineer from Nagpur, India. A dark, pixel-serif, glass-card site that tells a story instead of listing a CV, with a few things you can actually play with.
+The personal portfolio of **Pawan Patil** — Forward Deployed Engineer at Eigi AI and AI & frontend developer from Nagpur, India. A dark, pixel-serif, glass-card site that tells a story instead of listing a CV, with a few things you can actually play with.
 
 ## Highlights
 - **Forward Deployed Engineer intern at eigi.ai** — shipped the official eigi.ai website, plus fde.eigi.ai and the internal admin console

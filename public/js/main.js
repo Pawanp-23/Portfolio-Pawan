@@ -975,19 +975,37 @@ document.addEventListener('pointermove', e => {
 // ─────────────────────────────────────────────────────────────────────────────
 function startSite(){
   const loader = $('#loader');
-  loader.classList.add('done');
-  setTimeout(() => loader.remove(), 800);
+  loader.classList.add('gone');
+  setTimeout(() => loader.remove(), 1200);
   document.body.classList.add('ready');
   document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('in'));
   observeReveals();
   requestScrollTick();
   document.dispatchEvent(new Event('site:ready'));
 }
-const minIntro = reduceMotion ? 0 : 1400, t0 = performance.now();
-let started = false;
-const go = () => { if (started) return; started = true; setTimeout(startSite, Math.max(0, minIntro - (performance.now() - t0))); };
-if (document.readyState === 'complete') go(); else addEventListener('load', go);
-setTimeout(go, 3500); // never block on slow assets
+
+// Intro: "Pawan Patil" rises in letter by letter out of a soft blur, a red line draws,
+// "Fearlessly deployed." fades in, then the whole screen lifts like a curtain.
+// A repeat visit in the same session gets a quick version.
+const playIntro = () => new Promise(resolve => {
+  if (reduceMotion) return resolve();
+  let seen = false;
+  try { seen = sessionStorage.getItem('introSeen') === '1'; sessionStorage.setItem('introSeen', '1'); } catch {}
+  const loader = $('#loader'), name = $('#ldName');
+  name.innerHTML = [...name.textContent].map((c, i) => c === ' ' ? '<span class="sp"></span>' : `<span class="ch" style="--i:${i}">${esc(c)}</span>`).join('');
+  if (seen) loader.classList.add('quick');
+  const font = document.fonts?.load ? document.fonts.load('400 1em "Pixelify Sans"') : Promise.resolve();
+  Promise.race([font, new Promise(r => setTimeout(r, 700))]).then(() => {
+    requestAnimationFrame(() => loader.classList.add('on'));
+    setTimeout(resolve, seen ? 700 : 2300);                       // name + line + hook, then a short hold
+  });
+});
+
+const pageLoaded = new Promise(resolve => {
+  if (document.readyState === 'complete') resolve(); else addEventListener('load', resolve, { once:true });
+  setTimeout(resolve, 3000); // the intro never waits on slow third-party assets
+});
+Promise.all([playIntro(), pageLoaded]).then(startSite);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Contact modal + API integration

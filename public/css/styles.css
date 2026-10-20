@@ -206,6 +206,12 @@ body.ready .avatar{opacity:1;transform:none}
   font-size:clamp(2.4rem,9vw,7.25rem);line-height:1.02;letter-spacing:-.02em;
 }
 .hero-title > span{display:block}
+/* Headline entrance: line 1 glides in from the left, line 2 from the right, letters tightening as they land */
+.hero-title > span.reveal{opacity:0;filter:blur(12px);letter-spacing:.16em;
+  transition:opacity 1.1s var(--ease) var(--d,0s), transform 1.6s cubic-bezier(.16,1,.3,1) var(--d,0s), filter 1.2s var(--ease) var(--d,0s), letter-spacing 1.7s cubic-bezier(.16,1,.3,1) var(--d,0s)}
+.hero-title > span.reveal:nth-child(1){transform:translate3d(-18vw,0,0)}
+.hero-title > span.reveal:nth-child(2){transform:translate3d(18vw,0,0)}
+.hero-title > span.reveal.in{opacity:1;transform:none;filter:none;letter-spacing:-.02em}
 .rotator{display:inline-grid;justify-items:start;vertical-align:bottom;transition:width .6s var(--ease)}
 .rot-word{grid-area:1/1;white-space:nowrap;transition:opacity .45s var(--ease), transform .6s var(--ease), filter .45s}
 .rot-word.out{opacity:0;transform:translate3d(0,-.35em,0) rotate(-4deg);filter:blur(6px)}
@@ -765,7 +771,7 @@ html.crt::before{content:"";position:fixed;left:0;right:0;top:50%;height:2px;mar
 /* ── Reduced motion ────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
-  .reveal{opacity:1;transform:none;filter:none}
+  .reveal,.hero-title > span.reveal{opacity:1;transform:none;filter:none;letter-spacing:-.02em}
   .nav,.avatar,.gh-cell{transform:none;opacity:1}
   .ribbon-track{animation:none}
 }
